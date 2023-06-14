@@ -1,0 +1,30 @@
+package com.teamtek.jiraserver.Model;
+
+
+import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalTime;
+
+@Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class BurnDown {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private LocalTime timeStamp = LocalTime.now();
+
+    private int hours;
+
+    @ManyToOne
+    @JoinColumn(name= "issue_id", referencedColumnName="id")
+    private Issues issue;
+}
