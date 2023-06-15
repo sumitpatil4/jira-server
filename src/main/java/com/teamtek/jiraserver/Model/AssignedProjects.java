@@ -34,6 +34,10 @@ public class AssignedProjects {
 
     private LocalDate endDate;
 
+    @ManyToOne
+    @JoinColumn(name= "role_id", referencedColumnName="id")
+    private Roles role;
+
 
 
 }
