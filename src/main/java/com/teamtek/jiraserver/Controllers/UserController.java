@@ -1,11 +1,9 @@
 package com.teamtek.jiraserver.Controllers;
 
 
-import com.teamtek.jiraserver.DataTransferObject.UserDto;
+import com.teamtek.jiraserver.Model.Users;
 import com.teamtek.jiraserver.Services.UserService;
 import com.teamtek.jiraserver.Utils.UserRegisterBody;
-import com.teamtek.jiraserver.Utils.UserResponseBody;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +24,9 @@ public class UserController {
     }
 
     @GetMapping("/userByEmail/{email}")
-    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email){
-        UserDto userDto=this.userService.getUserByEmail(email);
-        return new ResponseEntity<>(userDto,HttpStatus.OK);
+    public ResponseEntity<Users> getUserByEmail(@PathVariable String email){
+        Users user=this.userService.getUserByEmail(email);
+        return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
     @GetMapping("/checkUserPass/{userId}")

@@ -2,23 +2,18 @@ package com.teamtek.jiraserver.ServicesImplementation;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.teamtek.jiraserver.DataTransferObject.UserDto;
 import com.teamtek.jiraserver.Model.Users;
 import com.teamtek.jiraserver.Repository.UserRepository;
 import com.teamtek.jiraserver.Services.UserService;
-import com.teamtek.jiraserver.Utils.UserLoginBody;
 import com.teamtek.jiraserver.Utils.UserRegisterBody;
-import com.teamtek.jiraserver.Utils.UserResponseBody;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -75,10 +70,9 @@ public class UserServiceImple implements UserService {
     }
 
     @Override
-    public UserDto getUserByEmail(String email) {
+    public Users getUserByEmail(String email) {
         Users users=this.userRepository.findByEmail(email);
-        UserDto userDto=this.modelMapper.map(users,UserDto.class);
-        return userDto;
+        return users;
     }
 
     @Override
