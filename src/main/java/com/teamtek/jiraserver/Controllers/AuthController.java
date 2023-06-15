@@ -52,11 +52,15 @@ public class AuthController {
 
 
     @PostMapping("/login/userByIdPass")
-    public ResponseEntity<UserResponseBody> login(@RequestBody UserLoginBody userLoginBody){
+    public ResponseEntity<?> login(@RequestBody UserLoginBody userLoginBody){
         try{
             String email = userLoginBody.getEmail();
             String pass = userLoginBody.getPassword();
             UserDto userDto = this.userService.getUserByEmail(email);
+            if(userDto.getEmail()==null){
+                System.out.println("hello");
+                return null;
+            }
             Users user = this.modelMapper.map(userDto,Users.class);
             String credential = user.getPassword();
 

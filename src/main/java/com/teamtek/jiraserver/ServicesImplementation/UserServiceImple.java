@@ -6,9 +6,7 @@ import com.teamtek.jiraserver.DataTransferObject.UserDto;
 import com.teamtek.jiraserver.Model.Users;
 import com.teamtek.jiraserver.Repository.UserRepository;
 import com.teamtek.jiraserver.Services.UserService;
-import com.teamtek.jiraserver.Utils.UserLoginBody;
-import com.teamtek.jiraserver.Utils.UserRegisterBody;
-import com.teamtek.jiraserver.Utils.UserResponseBody;
+import com.teamtek.jiraserver.Utils.*;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,13 +64,35 @@ public class UserServiceImple implements UserService {
 
 
     @Override
-    public String updatePassword(String userId, String password) {
+    public String setPassword(SetPassUserBody setPassUserBody) {
+        String userId = setPassUserBody.getUserId();
+        String password = setPassUserBody.getPassword();
         Users user=this.userRepository.findById(userId).orElseThrow();
         BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
         String pass=bCryptPasswordEncoder.encode(password);
         user.setPassword(pass);
+        this.userRepository.save(user);
+        return "You have successfully set your password.";
+    }
+
+    @Override
+    public String updatePassword(UpdatePassUserBody updatePassUserBody) {
+        String userId = updatePassUserBody.getUserId();
+        String oldPassword = updatePassUserBody.getOldPassword();
+        String newPassword = updatePassUserBody.getNewPassword();
+        Users user=this.userRepository.findById(userId).orElseThrow();
+        BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+        boolean check =bCryptPasswordEncoder.matches(oldPassword,user.getPassword());
+        String newPass=bCryptPasswordEncoder.encode(newPassword);
+        if(check){
+            user.setPassword(newPass);
+            this.userRepository.save(user);
+        }else {
+            return "You have entered wrong password";
+        }
         return "You have successfully changed your password.";
     }
+
 
     @Override
     public UserDto getUserByEmail(String email) {

@@ -3,6 +3,8 @@ package com.teamtek.jiraserver.Controllers;
 
 import com.teamtek.jiraserver.DataTransferObject.UserDto;
 import com.teamtek.jiraserver.Services.UserService;
+import com.teamtek.jiraserver.Utils.SetPassUserBody;
+import com.teamtek.jiraserver.Utils.UpdatePassUserBody;
 import com.teamtek.jiraserver.Utils.UserRegisterBody;
 import com.teamtek.jiraserver.Utils.UserResponseBody;
 import org.apache.catalina.User;
@@ -38,9 +40,16 @@ public class UserController {
     }
 
 
-    @PutMapping("userId/{userId}/updatePassword/{password}")
-    public ResponseEntity<String> updatePassword(@PathVariable String userId,@PathVariable String password){
-        String message=this.userService.updatePassword(userId,password);
+    @PutMapping("/updatePassword")
+    public ResponseEntity<String> updatePassword(@RequestBody UpdatePassUserBody updatePassUserBody){
+        String message=this.userService.updatePassword(updatePassUserBody);
+        return ResponseEntity.ok(message);
+    }
+
+
+    @PutMapping("/setPassword")
+    public ResponseEntity<String> setPassword(@RequestBody SetPassUserBody setPassUserBody){
+        String message=this.userService.setPassword(setPassUserBody);
         return ResponseEntity.ok(message);
     }
 
