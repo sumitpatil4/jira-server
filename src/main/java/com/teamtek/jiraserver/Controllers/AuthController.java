@@ -31,27 +31,13 @@ public class AuthController {
     private ModelMapper modelMapper;
 
     @PostMapping("/login/userByGoogle")
-    public ResponseEntity<UserResponseBody> login(@RequestBody GoogleAuthToken googleAuthToken){
-        try{
-            UserResponseBody userResponseBody =this.userService.loginGoogle(googleAuthToken);
-
-            return new ResponseEntity<>(userResponseBody, HttpStatus.OK);
-        }
-        catch (BadCredentialsException ex){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<?> login(@RequestBody GoogleAuthToken googleAuthToken){
+        return userService.loginGoogle(googleAuthToken);
     }
 
 
     @PostMapping("/login/userByIdPass")
-    public ResponseEntity<?> login(@RequestBody UserLoginBody userLoginBody){
-        try{
-            UserResponseBody userResponseBody = this.userService.loginIdPass(userLoginBody);
-            return new ResponseEntity<>(userResponseBody, HttpStatus.OK);
-
-        }
-        catch (BadCredentialsException ex){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<?> login(@RequestBody UserLoginBody userLoginBody) {
+        return userService.loginIdPass(userLoginBody);
     }
 }

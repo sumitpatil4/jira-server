@@ -17,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,37 +36,47 @@ public class UserServiceImple implements UserService {
     JwtTokenUtils jwtTokenUtil;
 
     @Override
-    public UserResponseBody loginGoogle(GoogleAuthToken googleAuthToken) {
-        Users user = decodeGoogleToken(googleAuthToken.getToken());
-        String accessToken = jwtTokenUtil.generateAccessToken(user);
+    public ResponseEntity<?> loginGoogle(GoogleAuthToken googleAuthToken) {
+        try{
+            Users user = decodeGoogleToken(googleAuthToken.getToken());
+            String accessToken = jwtTokenUtil.generateAccessToken(user);
 
-        UserResponseBody userResponseBody = new UserResponseBody(user.getId(),user.getFName(),user.getLName(), user.getEmail(), user.getProfileImg(), user.getRole(),accessToken);
+            UserResponseBody userResponseBody = new UserResponseBody(user.getId(),user.getFName(),user.getLName(), user.getEmail(), user.getProfileImg(), user.getRole(),accessToken);
 
-        return userResponseBody;
+            return new ResponseEntity<>(userResponseBody, HttpStatus.OK);
+        }
+        catch (BadCredentialsException ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @Override
-    public UserResponseBody loginIdPass(UserLoginBody userLoginBody) {
+    public ResponseEntity<?> loginIdPass(UserLoginBody userLoginBody) {
 
+        try{
             String email = userLoginBody.getEmail();
             String pass = userLoginBody.getPassword();
 
-            Users user = getUserByEmail(email);
-            if (user == null) {
+            Users user= getUserByEmail(email);
+            if(user==null){
                 return null;
             }
 
             String credential = user.getPassword();
 
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-            boolean check = bCryptPasswordEncoder.matches(pass, credential);
+            boolean check  = bCryptPasswordEncoder.matches(pass,credential);
 
-            if (check) {
+            if(check){
                 String accessToken = jwtTokenUtil.generateAccessToken(user);
-                UserResponseBody userResponseBody = new UserResponseBody(user.getId(), user.getFName(), user.getLName(), user.getEmail(), user.getProfileImg(), user.getRole(), accessToken);
-                return userResponseBody;
+                UserResponseBody userResponseBody = new UserResponseBody(user.getId(),user.getFName(),user.getLName(), user.getEmail(), user.getProfileImg(), user.getRole(),accessToken);
+                return new ResponseEntity<>(userResponseBody, HttpStatus.OK);
             }
             return null;
+        }
+        catch (BadCredentialsException ex){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
     }
 
     @Override
