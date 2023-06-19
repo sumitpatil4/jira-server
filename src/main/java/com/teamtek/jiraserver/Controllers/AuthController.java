@@ -6,6 +6,7 @@ import com.teamtek.jiraserver.Services.UserService;
 import com.teamtek.jiraserver.Utils.GoogleAuthToken;
 import com.teamtek.jiraserver.Utils.UserLoginBody;
 import com.teamtek.jiraserver.Utils.UserResponseBody;
+import org.apache.catalina.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,10 +33,7 @@ public class AuthController {
     @PostMapping("/login/userByGoogle")
     public ResponseEntity<UserResponseBody> login(@RequestBody GoogleAuthToken googleAuthToken){
         try{
-            Users user = this.userService.decodeGoogleToken(googleAuthToken.getToken());
-            String accessToken = jwtTokenUtil.generateAccessToken(user);
-
-            UserResponseBody userResponseBody = new UserResponseBody(user.getId(),user.getFName(),user.getLName(), user.getEmail(), user.getProfileImg(), user.getRole(),accessToken);
+            UserResponseBody userResponseBody =this.userService.loginGoogle(googleAuthToken);
 
             return new ResponseEntity<>(userResponseBody, HttpStatus.OK);
         }
@@ -48,25 +46,9 @@ public class AuthController {
     @PostMapping("/login/userByIdPass")
     public ResponseEntity<?> login(@RequestBody UserLoginBody userLoginBody){
         try{
-            String email = userLoginBody.getEmail();
-            String pass = userLoginBody.getPassword();
+            UserResponseBody userResponseBody = this.userService.loginIdPass(userLoginBody);
+            return new ResponseEntity<>(userResponseBody, HttpStatus.OK);
 
-            Users user= this.userService.getUserByEmail(email);
-            if(user==null){
-                return null;
-            }
-
-            String credential = user.getPassword();
-
-            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-            boolean check  = bCryptPasswordEncoder.matches(pass,credential);
-
-            if(check){
-                String accessToken = jwtTokenUtil.generateAccessToken(user);
-                UserResponseBody userResponseBody = new UserResponseBody(user.getId(),user.getFName(),user.getLName(), user.getEmail(), user.getProfileImg(), user.getRole(),accessToken);
-                return new ResponseEntity<>(userResponseBody, HttpStatus.OK);
-            }
-            return null;
         }
         catch (BadCredentialsException ex){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

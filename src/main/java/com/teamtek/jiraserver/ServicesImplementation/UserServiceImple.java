@@ -2,6 +2,7 @@ package com.teamtek.jiraserver.ServicesImplementation;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.teamtek.jiraserver.Configuration.Security.JwtTokenUtils;
 import com.teamtek.jiraserver.Model.Users;
 import com.teamtek.jiraserver.Repository.UserRepository;
 import com.teamtek.jiraserver.Services.UserService;
@@ -10,9 +11,12 @@ import com.teamtek.jiraserver.Utils.*;
 
 import com.teamtek.jiraserver.Utils.UserRegisterBody;
 
+import org.apache.catalina.User;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +30,44 @@ public class UserServiceImple implements UserService {
     private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    JwtTokenUtils jwtTokenUtil;
+
+    @Override
+    public UserResponseBody loginGoogle(GoogleAuthToken googleAuthToken) {
+        Users user = decodeGoogleToken(googleAuthToken.getToken());
+        String accessToken = jwtTokenUtil.generateAccessToken(user);
+
+        UserResponseBody userResponseBody = new UserResponseBody(user.getId(),user.getFName(),user.getLName(), user.getEmail(), user.getProfileImg(), user.getRole(),accessToken);
+
+        return userResponseBody;
+    }
+
+    @Override
+    public UserResponseBody loginIdPass(UserLoginBody userLoginBody) {
+
+            String email = userLoginBody.getEmail();
+            String pass = userLoginBody.getPassword();
+
+            Users user = getUserByEmail(email);
+            if (user == null) {
+                return null;
+            }
+
+            String credential = user.getPassword();
+
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            boolean check = bCryptPasswordEncoder.matches(pass, credential);
+
+            if (check) {
+                String accessToken = jwtTokenUtil.generateAccessToken(user);
+                UserResponseBody userResponseBody = new UserResponseBody(user.getId(), user.getFName(), user.getLName(), user.getEmail(), user.getProfileImg(), user.getRole(), accessToken);
+                return userResponseBody;
+            }
+            return null;
+    }
+
     @Override
     public String registerNewUser(UserRegisterBody userRegisterBody) {
         String email=userRegisterBody.getEmail();
