@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 
 @Entity
 @AllArgsConstructor
@@ -23,4 +26,7 @@ public class Attachments {
     @ManyToOne
     @JoinColumn(name= "issue_id", referencedColumnName="id")
     private Issues issue;
+
+    private LocalDate createdDate = LocalDate.now();
+    private LocalTime createdTime = LocalTime.now();
 }

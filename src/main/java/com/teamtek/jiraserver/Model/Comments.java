@@ -1,12 +1,9 @@
 package com.teamtek.jiraserver.Model;
 
 
-import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -15,20 +12,22 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class IssueStages {
+public class Comments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-
-    private int hierarchy;
+    @ManyToOne
+    @JoinColumn(name= "user_id", referencedColumnName="id")
+    private Users users;
 
     @ManyToOne
-    @JoinColumn(name= "project_id", referencedColumnName="id")
-    private Projects project;
+    @JoinColumn(name= "issue_id", referencedColumnName="id")
+    private Issues issue;
 
     private LocalDate createdDate = LocalDate.now();
     private LocalTime createdTime = LocalTime.now();
+
+    private String comment;
 }

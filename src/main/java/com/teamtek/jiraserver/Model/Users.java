@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,7 +32,6 @@ public class Users implements UserDetails {
     private String profileImg;
     private String role="USER";
     private String password;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
@@ -65,4 +66,6 @@ public class Users implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+    private LocalDate createdDate = LocalDate.now();
+    private LocalTime createdTime = LocalTime.now();
 }
