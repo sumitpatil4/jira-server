@@ -150,7 +150,8 @@ public class UserServiceImple implements UserService {
 
     @Override
     public Users getUserByEmail(String email) {
-        Users users=this.userRepository.findByEmail(email);
+        Users users=this.userRepository.findByEmail(email).orElse(null);
+
         return users;
     }
 
@@ -169,7 +170,7 @@ public class UserServiceImple implements UserService {
 
 
 
-       Users users=this.userRepository.findByEmail(map.get("email"));
+       Users users=this.userRepository.findByEmail(map.get("email")).orElse(null);
 
 
         if (users != null) {
