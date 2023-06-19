@@ -32,7 +32,7 @@ public class SpringSecurityConfiguration {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return userRepository.findByEmail(username);
+                return userRepository.findByEmail(username).orElse(null);
             }
         };
     }
@@ -55,7 +55,9 @@ public class SpringSecurityConfiguration {
                 .antMatchers("/auth/login/userByGoogle").permitAll()
                 .antMatchers("/auth/login/userByIdPass").permitAll()
                 .antMatchers("/api/user/register").permitAll()
-                .anyRequest().authenticated();
+//                .anyRequest().authenticated();
+
+        .anyRequest().permitAll();
         httpSecurity.exceptionHandling()
                 .authenticationEntryPoint(
                         (request, response, ex) -> {
