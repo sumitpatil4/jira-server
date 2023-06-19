@@ -85,9 +85,12 @@ public class UserServiceImple implements UserService {
         String fname=userRegisterBody.getFname();
         String lname=userRegisterBody.getLname();
         String password=userRegisterBody.getPassword();
-        if(userRepository.findByEmail(email)!=null){
+
+        Users users1=this.userRepository.findByEmail(email).orElse(null);
+        if(users1!=null){
             return "User already exist please login either by Google or use your password.";
         }
+
         if(email==null || fname==null || password==null){
             return "Please fill all the fields";
         }
