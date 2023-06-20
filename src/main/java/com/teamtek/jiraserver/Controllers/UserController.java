@@ -20,35 +20,31 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> createUser(@RequestBody UserRegisterBody userRegisterBody){
-        String message = this.userService.registerNewUser(userRegisterBody);
-        return new ResponseEntity<>(message,HttpStatus.OK);
+    public ResponseEntity<?> createUser(@RequestBody UserRegisterBody userRegisterBody){
+        return userService.registerNewUser(userRegisterBody);
     }
 
     @GetMapping("/userByEmail/{email}")
     public ResponseEntity<Users> getUserByEmail(@PathVariable String email){
-        Users user=this.userService.getUserByEmail(email);
-        return new ResponseEntity<>(user,HttpStatus.OK);
+        return userService.getUserByEmail(email);
     }
 
     @GetMapping("/checkUserPass/{userId}")
     public ResponseEntity<Boolean> checkNullPassword(@PathVariable String userId){
-        Boolean check=this.userService.checkNullPass(userId);
-        return new ResponseEntity<>(check,HttpStatus.OK);
+        return userService.checkNullPass(userId);
+
     }
 
 
     @PutMapping("/updatePassword")
     public ResponseEntity<String> updatePassword(@RequestBody UpdatePassUserBody updatePassUserBody){
-        String message=this.userService.updatePassword(updatePassUserBody);
-        return ResponseEntity.ok(message);
+        return userService.updatePassword(updatePassUserBody);
     }
 
 
     @PutMapping("/setPassword")
     public ResponseEntity<String> setPassword(@RequestBody SetPassUserBody setPassUserBody){
-        String message=this.userService.setPassword(setPassUserBody);
-        return ResponseEntity.ok(message);
+        return userService.setPassword(setPassUserBody);
     }
 
 

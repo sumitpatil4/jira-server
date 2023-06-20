@@ -18,17 +18,18 @@ public interface UserService {
     public ResponseEntity<?> loginGoogle(GoogleAuthToken googleAuthToken);
 
     public ResponseEntity<?> loginIdPass( UserLoginBody userLoginBody);
-    String registerNewUser(UserRegisterBody userRegisterBody);
-    boolean checkNullPass(String userId);
 
-    String setPassword(SetPassUserBody setPassUserBody);
+    public ResponseEntity<Boolean> checkNullPass(String userId);
 
-    String updatePassword(UpdatePassUserBody updatePassUserBody);
+    public ResponseEntity<String> setPassword(SetPassUserBody setPassUserBody);
+
+    public ResponseEntity<String> updatePassword(UpdatePassUserBody updatePassUserBody);
 
 
-    Users getUserByEmail(String email);
+    public ResponseEntity<Users> getUserByEmail(String email);
 
     Users decodeGoogleToken(String token);
 
 
+    ResponseEntity<?> registerNewUser(UserRegisterBody userRegisterBody);
 }
