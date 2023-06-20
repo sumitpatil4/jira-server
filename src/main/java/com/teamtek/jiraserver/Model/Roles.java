@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -26,8 +27,7 @@ public class Roles {
 
     private String role;
 
-    private LocalDate createdDate = LocalDate.now();
-    private LocalTime createdTime = LocalTime.now();
+    private LocalDateTime timeStamp = LocalDateTime.now();
 
     private boolean active=true;
 

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -25,8 +26,7 @@ public class Issues {
 
     private String description;
 
-    private LocalDate createdDate = LocalDate.now();
-    private LocalTime createdTime = LocalTime.now();
+    private LocalDateTime timeStamp = LocalDateTime.now();
 
     private boolean active=true;
 

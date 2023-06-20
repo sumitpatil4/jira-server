@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -35,8 +36,7 @@ public class AssignedProjects {
 
     private LocalDate endDate;
 
-    private LocalDate createdDate = LocalDate.now();
-    private LocalTime createdTime = LocalTime.now();
+    private LocalDateTime timeStamp = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name= "role_id", referencedColumnName="id")
