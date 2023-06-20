@@ -23,17 +23,22 @@ public class ProjectServiceImplement implements ProjectService {
 
     // Create new project
     public ResponseEntity<Projects> addProject(ProjectRequestBody body){
-        Users owner = userRepository.findById(body.getOwner()).orElseThrow(null);
-        Projects project = new Projects();
-        project.setTitle(body.getTitle());
-        project.setOwner(owner);
-        project.setDescription(body.getDescription());
-        project.setStartDate(body.getStartDate());
-        project.setEndDate(body.getEndDate());
+        try {
+            Users owner = userRepository.findById(body.getOwner()).orElseThrow(null);
+            Projects project = new Projects();
+            project.setTitle(body.getTitle());
+            project.setOwner(owner);
+            project.setDescription(body.getDescription());
+            project.setStartDate(body.getStartDate());
+            project.setEndDate(body.getEndDate());
 
-        Projects created = repository.save(project);
+            Projects created = repository.save(project);
 
-        return new ResponseEntity<Projects>(created, HttpStatus.CREATED);
+            return new ResponseEntity<Projects>(created, HttpStatus.CREATED);
+        }catch (Exception e){
+            return new ResponseEntity<Projects>((Projects) null, HttpStatus.BAD_REQUEST);
+        }
+
 
     }
 
@@ -49,32 +54,46 @@ public class ProjectServiceImplement implements ProjectService {
 
     //Update project
     public ResponseEntity<Projects> updateProject(ProjectRequestBody body){
-        Users owner = userRepository.findById(body.getOwner()).orElseThrow(null);
-        Projects existingProject = repository.findById(body.getId()).orElseThrow(null);
-        existingProject.setTitle(body.getTitle());
-        existingProject.setOwner(owner);
-        existingProject.setDescription(body.getDescription());
-        existingProject.setStartDate(body.getStartDate());
-        existingProject.setEndDate(body.getEndDate());
+        try {
+            Users owner = userRepository.findById(body.getOwner()).orElseThrow(null);
+            Projects existingProject = repository.findById(body.getId()).orElseThrow(null);
+            existingProject.setTitle(body.getTitle());
+            existingProject.setOwner(owner);
+            existingProject.setDescription(body.getDescription());
+            existingProject.setStartDate(body.getStartDate());
+            existingProject.setEndDate(body.getEndDate());
 
-        Projects updatedProject = repository.save(existingProject);
+            Projects updatedProject = repository.save(existingProject);
 
-        return new ResponseEntity<Projects>(updatedProject, HttpStatus.CREATED);
+            return new ResponseEntity<Projects>(updatedProject, HttpStatus.CREATED);
+        }catch (Exception e){
+            return new ResponseEntity<Projects>((Projects) null, HttpStatus.BAD_REQUEST);
+        }
+
 
     }
 
     //Delete project by making active status to false
     public ResponseEntity<Projects> deleteProject(Long id){
-        Projects project = repository.findById(id).orElseThrow(null);
-        project.setActive(false);
-        Projects updatedProject = repository.save(project);
-        return new ResponseEntity<>(updatedProject,HttpStatus.NO_CONTENT);
+        try {
+            Projects project = repository.findById(id).orElseThrow(null);
+            project.setActive(false);
+            Projects updatedProject = repository.save(project);
+            return new ResponseEntity<>(updatedProject,HttpStatus.NO_CONTENT);
+        }catch (Exception e){
+            return new ResponseEntity<Projects>((Projects) null, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     //Get projects by ID
     public ResponseEntity<Projects> findById(Long id){
-        Projects project = repository.findById(id).orElseThrow(null);
-        return new ResponseEntity<Projects>(project, HttpStatus.OK);
+        try {
+            Projects project = repository.findById(id).orElseThrow(null);
+            return new ResponseEntity<Projects>(project, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<Projects>((Projects) null, HttpStatus.BAD_REQUEST);
+        }
     }
 
 
