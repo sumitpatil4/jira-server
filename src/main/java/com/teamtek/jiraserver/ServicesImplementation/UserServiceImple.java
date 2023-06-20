@@ -11,7 +11,6 @@ import com.teamtek.jiraserver.Utils.*;
 
 import com.teamtek.jiraserver.Utils.UserRegisterBody;
 
-import org.apache.catalina.User;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,7 @@ public class UserServiceImple implements UserService {
             String email = userLoginBody.getEmail();
             String pass = userLoginBody.getPassword();
 
-            Users user= getUserByEmail(email);
+            Users user= getUserByEmail(email).getBody();
             if(user==null){
                 return null;
             }
@@ -79,61 +78,41 @@ public class UserServiceImple implements UserService {
         }
     }
 
-    @Override
-    public String registerNewUser(UserRegisterBody userRegisterBody) {
-        String email=userRegisterBody.getEmail();
-        String fname=userRegisterBody.getFname();
-        String lname=userRegisterBody.getLname();
-        String password=userRegisterBody.getPassword();
 
-        Users users1=this.userRepository.findByEmail(email).orElse(null);
-        if(users1!=null){
-            return "User already exist please login either by Google or use your password.";
-        }
-
-        if(email==null || fname==null || password==null){
-            return "Please fill all the fields";
-        }
-        Users users=new Users();
-        users.setId(UUID.randomUUID().toString());
-        users.setFName(fname);
-        users.setLName(lname);
-        users.setEmail(email);
-        BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
-        String pass=bCryptPasswordEncoder.encode(password);
-        users.setPassword(pass);
-        Users newUser=this.userRepository.save(users);
-
-        return "Welcome to Accolite Jira. Please Login With your Credentials To Get Started.";
-    }
 
     @Override
-    public boolean checkNullPass(String userId) {
+    public ResponseEntity<Boolean> checkNullPass(String userId) {
         Users users=this.userRepository.findById(userId).orElseThrow(null);
 
         if (users.getPassword()==null){
-            return false;
+            return new ResponseEntity<>(false, HttpStatus.OK);
         }
-        return true;
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 
 
 
 
     @Override
-    public String setPassword(SetPassUserBody setPassUserBody) {
+    public ResponseEntity<String> setPassword(SetPassUserBody setPassUserBody) {
         String userId = setPassUserBody.getUserId();
         String password = setPassUserBody.getPassword();
         Users user=this.userRepository.findById(userId).orElseThrow();
+        String message;
+        if(user.getPassword()!=null){
+            message= "Please Update Password";
+            return new ResponseEntity<>(message,HttpStatus.OK);
+        }
         BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
         String pass=bCryptPasswordEncoder.encode(password);
         user.setPassword(pass);
         this.userRepository.save(user);
-        return "You have successfully set your password.";
+        message= "You have successfully set your password.";
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @Override
-    public String updatePassword(UpdatePassUserBody updatePassUserBody) {
+    public ResponseEntity<String> updatePassword(UpdatePassUserBody updatePassUserBody) {
         String userId = updatePassUserBody.getUserId();
         String oldPassword = updatePassUserBody.getOldPassword();
         String newPassword = updatePassUserBody.getNewPassword();
@@ -141,21 +120,24 @@ public class UserServiceImple implements UserService {
         BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
         boolean check =bCryptPasswordEncoder.matches(oldPassword,user.getPassword());
         String newPass=bCryptPasswordEncoder.encode(newPassword);
+        String message;
         if(check){
             user.setPassword(newPass);
             this.userRepository.save(user);
         }else {
-            return "You have entered wrong password";
+            message= "You have entered wrong password";
+            return new ResponseEntity<>(message, HttpStatus.OK);
         }
-        return "You have successfully changed your password.";
+        message= "You have successfully changed your password.";
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
 
     @Override
-    public Users getUserByEmail(String email) {
+    public ResponseEntity<Users> getUserByEmail(String email) {
         Users users=this.userRepository.findByEmail(email).orElse(null);
 
-        return users;
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @Override
@@ -193,6 +175,41 @@ public class UserServiceImple implements UserService {
         return users1;
     }
 
+    @Override
+    public ResponseEntity<?> registerNewUser(UserRegisterBody userRegisterBody) {
+        String email=userRegisterBody.getEmail();
+        String fname=userRegisterBody.getFname();
+        String lname=userRegisterBody.getLname();
+        String password=userRegisterBody.getPassword();
+        String message;
+
+        Users users1=this.userRepository.findByEmail(email).orElse(null);
+        if(users1!=null){
+            message= "User already exist please login either by Google or use your password.";
+            return new ResponseEntity<>(message,HttpStatus.OK);
+        }
+
+        if(email==null || fname==null || password==null){
+            return null;
+        }
+        Users users=new Users();
+        users.setId(UUID.randomUUID().toString());
+        users.setFName(fname);
+        users.setLName(lname);
+        users.setEmail(email);
+        BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+        String pass=bCryptPasswordEncoder.encode(password);
+        users.setPassword(pass);
+        Users newUser=this.userRepository.save(users);
+
+        UserLoginBody userLoginBody=new UserLoginBody();
+        userLoginBody.setEmail(email);
+        userLoginBody.setPassword(password);
+
+        ResponseEntity<?> userResponseBody=this.loginIdPass(userLoginBody);
+
+        return (ResponseEntity<UserResponseBody>) userResponseBody;
+    }
 
 
 }
