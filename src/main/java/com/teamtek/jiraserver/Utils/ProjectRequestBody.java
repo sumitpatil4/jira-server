@@ -22,5 +22,7 @@ public class ProjectRequestBody {
 
     private LocalDate endDate;
 
+    private int sprintNumber;
 
+    private int issueNumber;
 }

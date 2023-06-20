@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -36,6 +37,9 @@ public class Projects {
 
     private LocalDate endDate;
 
-    private LocalDate createdDate = LocalDate.now();
-    private LocalTime createdTime = LocalTime.now();
+    private int sprintNumber=1;
+
+    private int issueNumber=1;
+
+    private LocalDateTime timeStamp = LocalDateTime.now();
 }
