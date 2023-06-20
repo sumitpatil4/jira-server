@@ -28,6 +28,8 @@ public class Issues {
     private LocalDate createdDate = LocalDate.now();
     private LocalTime createdTime = LocalTime.now();
 
+    private boolean active=true;
+
     private LocalDate completionDate;
 
     private int storyPoints;

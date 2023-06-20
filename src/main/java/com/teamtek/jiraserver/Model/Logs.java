@@ -23,6 +23,8 @@ public class Logs {
     private LocalDate createdDate = LocalDate.now();
     private LocalTime createdTime = LocalTime.now();
 
+    private boolean active=true;
+
     private String field;
 
     private String action;

@@ -36,4 +36,6 @@ public class Sprints {
     private LocalDate createdDate = LocalDate.now();
     private LocalTime createdTime = LocalTime.now();
 
+    private boolean active=true;
+
 }

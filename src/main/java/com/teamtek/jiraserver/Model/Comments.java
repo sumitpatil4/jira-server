@@ -30,4 +30,6 @@ public class Comments {
     private LocalTime createdTime = LocalTime.now();
 
     private String comment;
+
+    private boolean active=true;
 }
