@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateIssuesBody {
+public class CreateIssueBody {
     private String title;
     private String description;
     private LocalDate createdDate;
