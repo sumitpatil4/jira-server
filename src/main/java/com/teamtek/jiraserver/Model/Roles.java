@@ -29,4 +29,6 @@ public class Roles {
     private LocalDate createdDate = LocalDate.now();
     private LocalTime createdTime = LocalTime.now();
 
+    private boolean active=true;
+
 }

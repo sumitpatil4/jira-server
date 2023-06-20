@@ -28,13 +28,13 @@ public class ProjectController {
 
     }
 
-    @GetMapping("/")
+    @GetMapping("/all-project")
     public ResponseEntity<List<Projects>> findAll(){
         return service.findAll();
     }
 
     @PutMapping("/update-project")
-    public ResponseEntity<Projects> updateProject(ProjectRequestBody body){
+    public ResponseEntity<Projects> updateProject(@RequestBody ProjectRequestBody body){
         return service.updateProject(body);
     }
 

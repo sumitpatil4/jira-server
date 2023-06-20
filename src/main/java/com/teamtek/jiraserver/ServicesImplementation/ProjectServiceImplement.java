@@ -63,11 +63,12 @@ public class ProjectServiceImplement implements ProjectService {
 
     }
 
-    //Delete project
+    //Delete project by making active status to false
     public ResponseEntity<Projects> deleteProject(Long id){
         Projects project = repository.findById(id).orElseThrow(null);
-        repository.delete(project);
-        return new ResponseEntity<>(null,HttpStatus.NO_CONTENT);
+        project.setActive(false);
+        Projects updatedProject = repository.save(project);
+        return new ResponseEntity<>(updatedProject,HttpStatus.NO_CONTENT);
     }
 
     //Get projects by ID

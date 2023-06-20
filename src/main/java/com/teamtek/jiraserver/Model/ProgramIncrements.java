@@ -32,6 +32,8 @@ public class ProgramIncrements {
     private LocalDate createdDate = LocalDate.now();
     private LocalTime createdTime = LocalTime.now();
 
+    private boolean active=true;
+
     private LocalDate startDate;
 
     private LocalDate endDate;

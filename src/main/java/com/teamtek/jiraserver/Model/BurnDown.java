@@ -24,6 +24,8 @@ public class BurnDown {
     private LocalDate createdDate = LocalDate.now();
     private LocalTime createdTime = LocalTime.now();
 
+    private boolean active=true;
+
     private int hours;
 
     @ManyToOne

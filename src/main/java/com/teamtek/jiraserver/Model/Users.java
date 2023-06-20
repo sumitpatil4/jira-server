@@ -27,6 +27,8 @@ public class Users implements UserDetails {
     private String id;
     private String fName;
     private String lName;
+
+    private boolean active=true;
     @Email(message = "enter valid email address")
     private String email;
     private String profileImg;

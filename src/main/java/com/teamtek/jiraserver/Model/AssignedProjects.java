@@ -42,4 +42,6 @@ public class AssignedProjects {
     @JoinColumn(name= "role_id", referencedColumnName="id")
     private Roles role;
 
+    private boolean active=true;
+
 }
