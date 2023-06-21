@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 
@@ -27,8 +28,7 @@ public class Attachments {
     @JoinColumn(name= "issue_id", referencedColumnName="id")
     private Issues issue;
 
-    private LocalDate createdDate = LocalDate.now();
-    private LocalTime createdTime = LocalTime.now();
+    private LocalDateTime timeStamp = LocalDateTime.now();
 
     private boolean active=true;
 }
