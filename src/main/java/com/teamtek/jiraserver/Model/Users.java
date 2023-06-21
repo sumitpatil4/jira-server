@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.*;
 import java.time.LocalDate;
@@ -68,6 +69,5 @@ public class Users implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-    private LocalDate createdDate = LocalDate.now();
-    private LocalTime createdTime = LocalTime.now();
+    private LocalDateTime timeStamp = LocalDateTime.now();
 }

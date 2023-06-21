@@ -31,6 +31,8 @@ public class ProjectServiceImplement implements ProjectService {
             project.setDescription(body.getDescription());
             project.setStartDate(body.getStartDate());
             project.setEndDate(body.getEndDate());
+            project.setSprintNumber(body.getSprintNumber());
+            project.setIssueNumber(body.getIssueNumber());
 
             Projects created = repository.save(project);
 
