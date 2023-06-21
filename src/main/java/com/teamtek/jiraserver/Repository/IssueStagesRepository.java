@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface IssueStagesRepository extends JpaRepository<IssueStages,Long> {
-    List<IssueStages> findAllByProject(Projects projects);
+    List<IssueStages> findAllByProjectAndActive(Projects projects, boolean active);
 }

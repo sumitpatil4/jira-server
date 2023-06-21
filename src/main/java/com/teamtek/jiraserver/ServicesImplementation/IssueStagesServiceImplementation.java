@@ -42,7 +42,7 @@ public class IssueStagesServiceImplementation implements IssueStagesService {
     public ResponseEntity<List<IssueStages>> findByProject(Long projectId) {
         try{
             Projects projects = this.projectRepository.findById(projectId).orElseThrow(null);
-            List<IssueStages> issueStages = issueStagesRepository.findAllByProject(projects);
+            List<IssueStages> issueStages = issueStagesRepository.findAllByProjectAndActive(projects, true);
             return new ResponseEntity<>(issueStages, HttpStatus.OK);
         }
         catch (Exception e){
