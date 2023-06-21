@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @AllArgsConstructor
@@ -24,7 +25,10 @@ public class Issues {
 
     private String description;
 
-    private LocalDate createdDate;
+    private LocalDate createdDate = LocalDate.now();
+    private LocalTime createdTime = LocalTime.now();
+
+    private boolean active=true;
 
     private LocalDate completionDate;
 

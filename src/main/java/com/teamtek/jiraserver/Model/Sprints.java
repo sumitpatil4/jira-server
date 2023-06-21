@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @AllArgsConstructor
@@ -31,5 +32,10 @@ public class Sprints {
     private Projects project;
 
     private boolean completed;
+
+    private LocalDate createdDate = LocalDate.now();
+    private LocalTime createdTime = LocalTime.now();
+
+    private boolean active=true;
 
 }

@@ -1,27 +1,26 @@
 package com.teamtek.jiraserver.Model;
 
-import javax.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Attachments {
+public class Comments {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String file;
+    @ManyToOne
+    @JoinColumn(name= "user_id", referencedColumnName="id")
+    private Users users;
 
     @ManyToOne
     @JoinColumn(name= "issue_id", referencedColumnName="id")
@@ -29,6 +28,8 @@ public class Attachments {
 
     private LocalDate createdDate = LocalDate.now();
     private LocalTime createdTime = LocalTime.now();
+
+    private String comment;
 
     private boolean active=true;
 }

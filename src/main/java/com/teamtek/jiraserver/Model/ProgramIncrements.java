@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @AllArgsConstructor
@@ -26,4 +28,13 @@ public class ProgramIncrements {
     @ManyToOne
     @JoinColumn(name= "project_id", referencedColumnName="id")
     private Projects project;
+
+    private LocalDate createdDate = LocalDate.now();
+    private LocalTime createdTime = LocalTime.now();
+
+    private boolean active=true;
+
+    private LocalDate startDate;
+
+    private LocalDate endDate;
 }

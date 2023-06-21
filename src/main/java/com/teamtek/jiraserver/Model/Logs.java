@@ -20,9 +20,10 @@ public class Logs {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate date = LocalDate.now();
+    private LocalDate createdDate = LocalDate.now();
+    private LocalTime createdTime = LocalTime.now();
 
-    private LocalTime time = LocalTime.now();
+    private boolean active=true;
 
     private String field;
 

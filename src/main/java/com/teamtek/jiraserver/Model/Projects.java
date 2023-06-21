@@ -8,8 +8,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
+
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -18,6 +21,8 @@ public class Projects {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private boolean active=true;
 
     private String title;
 
@@ -30,4 +35,7 @@ public class Projects {
     private LocalDate startDate;
 
     private LocalDate endDate;
+
+    private LocalDate createdDate = LocalDate.now();
+    private LocalTime createdTime = LocalTime.now();
 }
