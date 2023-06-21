@@ -54,7 +54,8 @@ public class RolesServiceImplementation implements RolesService {
     public ResponseEntity<Roles> deleteRoles(Long id) {
         try {
             Roles role = this.rolesRepository.findById(id).orElseThrow(null);
-            this.rolesRepository.delete(role);
+            role.setActive(false);
+            this.rolesRepository.save(role);
             return new ResponseEntity<>(role, HttpStatus.OK);
         }
         catch (Exception e) {
