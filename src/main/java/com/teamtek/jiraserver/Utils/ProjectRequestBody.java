@@ -1,5 +1,6 @@
 package com.teamtek.jiraserver.Utils;
 
+import com.teamtek.jiraserver.Model.Sprints;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -25,4 +26,6 @@ public class ProjectRequestBody {
     private int sprintNumber;
 
     private int issueNumber;
+
+    private Long activeSprint;
 }

@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<Projects,Long> {
-    List<Projects> findByOwnerId(String id);
+    List<Projects> findByOwnerIdAndActive(String id, boolean status);
 
 }
