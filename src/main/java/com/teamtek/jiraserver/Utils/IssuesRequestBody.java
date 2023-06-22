@@ -14,7 +14,6 @@ import java.time.LocalDate;
 public class IssuesRequestBody {
     private String title;
     private String description;
-    private LocalDate createdDate;
     private LocalDate completionDate;
     private int storyPoints;
     private int estimatedTime;

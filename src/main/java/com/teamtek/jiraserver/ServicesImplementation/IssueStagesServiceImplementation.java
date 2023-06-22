@@ -67,4 +67,16 @@ public class IssueStagesServiceImplementation implements IssueStagesService {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Override
+    public ResponseEntity<IssueStages> findLeastHierarchyStageOfProject(Long id) {
+        try{
+            Projects projects = this.projectRepository.findById(id).orElseThrow(null);
+            IssueStages issueStages = issueStagesRepository.findIssueStageWithLeastHierarchy(projects.getId());
+            return new ResponseEntity<>(issueStages, HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
