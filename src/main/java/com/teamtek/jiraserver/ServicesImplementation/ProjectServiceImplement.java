@@ -33,7 +33,9 @@ public class ProjectServiceImplement implements ProjectService {
             project.setEndDate(body.getEndDate());
             project.setSprintNumber(body.getSprintNumber());
             project.setIssueNumber(body.getIssueNumber());
-
+            project.setActiveSprint(null);
+            project.setSprintNumber(1);
+            project.setIssueNumber(1);
             Projects created = repository.save(project);
 
             return new ResponseEntity<Projects>(created, HttpStatus.CREATED);
