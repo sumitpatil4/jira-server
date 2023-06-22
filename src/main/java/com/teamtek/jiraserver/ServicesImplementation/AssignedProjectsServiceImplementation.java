@@ -53,8 +53,6 @@ public class AssignedProjectsServiceImplementation implements AssignedProjectsSe
     @Override
     public ResponseEntity<AssignedProjects> addUserToATeam(long teamId, AssignedProjectRequestBody assignedProjectRequestBody) {
 
-
-
         String email = assignedProjectRequestBody.getEmail();
         Long roleId = assignedProjectRequestBody.getRoleId();
         int capacity = assignedProjectRequestBody.getCapacity();
@@ -62,7 +60,7 @@ public class AssignedProjectsServiceImplementation implements AssignedProjectsSe
 
         Optional<Users> user = userRepository.findByEmail(email);
 
-        if(user==null) {
+        if(user.isEmpty()) {
             userServiceImple.addUserToTeam(email);
             Optional<Users> user1 = userRepository.findByEmail(email);
             AssignedProjects newAssignedProjects = new AssignedProjects();
