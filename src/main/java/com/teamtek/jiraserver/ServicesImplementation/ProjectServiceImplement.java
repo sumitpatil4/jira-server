@@ -104,19 +104,11 @@ public class ProjectServiceImplement implements ProjectService {
     //Update project
     public ResponseEntity<Projects> updateProject(ProjectRequestBody body){
         try {
-            Users owner = userRepository.findById(body.getOwner()).orElseThrow(null);
             Projects existingProject = repository.findById(body.getId()).orElseThrow(null);
             existingProject.setTitle(body.getTitle());
-            existingProject.setOwner(owner);
             existingProject.setDescription(body.getDescription());
             existingProject.setStartDate(body.getStartDate());
             existingProject.setEndDate(body.getEndDate());
-            existingProject.setSprintNumber(body.getSprintNumber());
-            existingProject.setIssueNumber(body.getIssueNumber());
-
-            Sprints activeSprints = sprintRepository.findById(body.getActiveSprint()).orElseThrow(null);
-
-            existingProject.setActiveSprint(activeSprints);
 
             Projects updatedProject = repository.save(existingProject);
 
