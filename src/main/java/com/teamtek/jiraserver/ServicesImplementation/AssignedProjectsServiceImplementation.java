@@ -2,9 +2,11 @@ package com.teamtek.jiraserver.ServicesImplementation;
 
 import com.teamtek.jiraserver.Model.AssignedProjects;
 import com.teamtek.jiraserver.Model.Roles;
+import com.teamtek.jiraserver.Model.Teams;
 import com.teamtek.jiraserver.Model.Users;
 import com.teamtek.jiraserver.Repository.AssignedProjectsRepository;
 import com.teamtek.jiraserver.Repository.RolesRepository;
+import com.teamtek.jiraserver.Repository.TeamRepository;
 import com.teamtek.jiraserver.Repository.UserRepository;
 import com.teamtek.jiraserver.Services.AssignedProjectsService;
 import com.teamtek.jiraserver.Utils.AssignedProjectRequestBody;
@@ -26,8 +28,8 @@ public class AssignedProjectsServiceImplementation implements AssignedProjectsSe
     private UserRepository userRepository;
     @Autowired
     private RolesRepository rolesRepository;
-
-
+    @Autowired
+    private TeamRepository teamRepository;
 
     @Autowired
     private UserServiceImple userServiceImple;
@@ -60,7 +62,13 @@ public class AssignedProjectsServiceImplementation implements AssignedProjectsSe
         else
             newAssignedProjects.setUsers(user);
 
-        Roles roles =
+        Optional<Roles> roles = rolesRepository.findById(roleId);
+        newAssignedProjects.setRole(roles);
+
+        Optional<Teams> teams = teamRepository.findById(teamId);
+        newAssignedProjects.setTeam(teams);
+
+        newAssignedProjects.setCapacity(capacity);
 
 
     }
