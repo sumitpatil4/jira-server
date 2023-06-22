@@ -31,14 +31,14 @@ public class AssignedProjectsController {
     public ResponseEntity<AssignedProjects> getDetailOfAssigned(@PathVariable("assignProjectId") long id){
         return assignedProjectsService.getDetailofAssigned(id);
     }
-    @PutMapping("removeUserFromTeam/{assignProjectId")
+    @PutMapping("removeUserFromTeam/{assignProjectId}")
     public ResponseEntity<String> removeUserFromTeam(@PathVariable("assignProjectId") long id){
         return assignedProjectsService.removeUserFromTeam(id);
 
     }
-    @PutMapping("updateCapacity/{assignProjectId}")
-    public ResponseEntity<String> updateCapacity(@PathVariable("assignProjectId") long id){
-        return assignedProjectsService.updateCapacityOfUser(id);
+    @PutMapping("updateCapacity/{assignProjectId}/capacity/{capacity}")
+    public ResponseEntity<String> updateCapacity(@PathVariable("assignProjectId") long id,@PathVariable int capacity){
+        return assignedProjectsService.updateCapacityOfUser(id,capacity);
 
     }
 

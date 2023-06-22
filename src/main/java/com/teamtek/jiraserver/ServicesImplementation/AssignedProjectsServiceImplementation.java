@@ -11,6 +11,7 @@ import com.teamtek.jiraserver.Repository.UserRepository;
 import com.teamtek.jiraserver.Services.AssignedProjectsService;
 import com.teamtek.jiraserver.Utils.AssignedProjectRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +24,13 @@ public class AssignedProjectsServiceImplementation implements AssignedProjectsSe
 
     @Autowired
     private AssignedProjectsRepository assignedProjectsRepository;
+    @Autowired
+    private TeamRepository teamRepository;
 
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private RolesRepository rolesRepository;
-    @Autowired
-    private TeamRepository teamRepository;
 
     @Autowired
     private UserServiceImple userServiceImple;
@@ -37,18 +38,22 @@ public class AssignedProjectsServiceImplementation implements AssignedProjectsSe
 
     @Override
     public ResponseEntity<List<AssignedProjects>> getAllUsersOfATeam(long id) {
-        return null;
+        Teams teams=this.teamRepository.findById(id).orElseThrow();
+        List<AssignedProjects> assignedProjects=this.assignedProjectsRepository.getAllAssignedByTeam(teams);
+        return new ResponseEntity<>(assignedProjects, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<AssignedProjects> getDetailofAssigned(long id) {
-        return null;
+        AssignedProjects assignedProjects=this.assignedProjectsRepository.findById(id).orElse(null);
+            return new ResponseEntity<>(assignedProjects, HttpStatus.OK);
+
     }
 
     @Override
     public ResponseEntity<AssignedProjects> addUserToATeam(long teamId, AssignedProjectRequestBody assignedProjectRequestBody) {
 
-        AssignedProjects newAssignedProjects = new AssignedProjects();
+
 
         String email = assignedProjectRequestBody.getEmail();
         Long roleId = assignedProjectRequestBody.getRoleId();
@@ -57,29 +62,70 @@ public class AssignedProjectsServiceImplementation implements AssignedProjectsSe
 
         Optional<Users> user = userRepository.findByEmail(email);
 
-        if(user==null)
+        if(user==null) {
             userServiceImple.addUserToTeam(email);
-        else
-            newAssignedProjects.setUsers(user);
+            Optional<Users> user1 = userRepository.findByEmail(email);
+            AssignedProjects newAssignedProjects = new AssignedProjects();
+            Optional<Teams> team = teamRepository.findById(teamId);
+            Optional<Roles> role = rolesRepository.findById(roleId);
+            Users users=user1.orElseThrow();
+            Teams teams = team.orElseThrow();
+            Roles roles = role.orElseThrow();
 
-        Optional<Roles> roles = rolesRepository.findById(roleId);
-        newAssignedProjects.setRole(roles);
+            newAssignedProjects.setUsers(users);
+            newAssignedProjects.setTeam(teams);
+            newAssignedProjects.setRole(roles);
+            newAssignedProjects.setCapacity(capacity);
+            newAssignedProjects.setEndDate(endDate);
 
-        Optional<Teams> teams = teamRepository.findById(teamId);
-        newAssignedProjects.setTeam(teams);
+            AssignedProjects assignedProjects=assignedProjectsRepository.save(newAssignedProjects);
+            return new ResponseEntity<>(assignedProjects,HttpStatus.OK);
 
-        newAssignedProjects.setCapacity(capacity);
+        }
+        else{
+            AssignedProjects newAssignedProjects = new AssignedProjects();
+            Optional<Teams> team = teamRepository.findById(teamId);
+            Optional<Roles> role = rolesRepository.findById(roleId);
+            Users users=user.orElseThrow();
+            Teams teams = team.orElseThrow();
+            Roles roles = role.orElseThrow();
 
+            newAssignedProjects.setUsers(users);
+            newAssignedProjects.setTeam(teams);
+            newAssignedProjects.setRole(roles);
+            newAssignedProjects.setCapacity(capacity);
+            newAssignedProjects.setEndDate(endDate);
 
+            AssignedProjects assignedProjects=assignedProjectsRepository.save(newAssignedProjects);
+            return new ResponseEntity<>(assignedProjects,HttpStatus.OK);
+        }
     }
 
     @Override
-    public ResponseEntity<String> updateCapacityOfUser(long id) {
-        return null;
+    public ResponseEntity<String> updateCapacityOfUser(long id,int capacity ) {
+        AssignedProjects assignedProjects=this.assignedProjectsRepository.findById(id).orElse(null);
+        if(assignedProjects==null){
+            String message="Assignee not Found.";
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+        assignedProjects.setCapacity(capacity);
+        this.assignedProjectsRepository.save(assignedProjects);
+        String message="User updated successfully.";
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<String> removeUserFromTeam(long id) {
-        return null;
+        AssignedProjects assignedProjects=this.assignedProjectsRepository.findById(id).orElse(null);
+        if(assignedProjects==null){
+            String message="Assignee not Found.";
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+        assignedProjects.setActive(false);
+        this.assignedProjectsRepository.save(assignedProjects);
+        String message="User Removed successfully.";
+        return new ResponseEntity<>(message, HttpStatus.OK);
+
+
     }
 }
