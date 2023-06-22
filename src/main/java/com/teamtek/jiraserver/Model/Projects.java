@@ -2,6 +2,8 @@ package com.teamtek.jiraserver.Model;
 
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 
@@ -29,7 +32,15 @@ public class Projects {
 
     @ManyToOne
     @JoinColumn(name= "owner_id", referencedColumnName="id")
+    @JsonIgnore
     private Users owner;
+
+    @OneToOne
+    @JoinColumn(name = "active_sprint")
+    private Sprints activeSprint;
+
+    @OneToMany(mappedBy = "project")
+    List<Sprints> sprintsList;
 
     private String description;
 
@@ -37,9 +48,9 @@ public class Projects {
 
     private LocalDate endDate;
 
-    private int sprintNumber=1;
+    private int sprintNumber;
 
-    private int issueNumber=1;
+    private int issueNumber;
 
     private LocalDateTime timeStamp = LocalDateTime.now();
 }
