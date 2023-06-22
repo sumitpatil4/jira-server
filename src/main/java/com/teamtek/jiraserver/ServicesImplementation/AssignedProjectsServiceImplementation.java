@@ -1,10 +1,12 @@
 package com.teamtek.jiraserver.ServicesImplementation;
 
 import com.teamtek.jiraserver.Model.AssignedProjects;
+import com.teamtek.jiraserver.Model.Teams;
 import com.teamtek.jiraserver.Repository.AssignedProjectsRepository;
 import com.teamtek.jiraserver.Services.AssignedProjectsService;
 import com.teamtek.jiraserver.Utils.AssignedProjectRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +21,15 @@ public class AssignedProjectsServiceImplementation implements AssignedProjectsSe
 
     @Override
     public ResponseEntity<List<AssignedProjects>> getAllUsersOfATeam(long id) {
+        Teams teams=
         return null;
     }
 
     @Override
     public ResponseEntity<AssignedProjects> getDetailofAssigned(long id) {
-        return null;
+        AssignedProjects assignedProjects=this.assignedProjectsRepository.findById(id).orElse(null);
+            return new ResponseEntity<>(assignedProjects, HttpStatus.OK);
+
     }
 
     @Override
@@ -33,12 +38,30 @@ public class AssignedProjectsServiceImplementation implements AssignedProjectsSe
     }
 
     @Override
-    public ResponseEntity<String> updateCapacityOfUser(long id) {
-        return null;
+    public ResponseEntity<String> updateCapacityOfUser(long id,int capacity ) {
+        AssignedProjects assignedProjects=this.assignedProjectsRepository.findById(id).orElse(null);
+        if(assignedProjects==null){
+            String message="Assignee not Found.";
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+        assignedProjects.setCapacity(capacity);
+        this.assignedProjectsRepository.save(assignedProjects);
+        String message="User updated successfully.";
+        return new ResponseEntity<>(message, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<String> removeUserFromTeam(long id) {
-        return null;
+        AssignedProjects assignedProjects=this.assignedProjectsRepository.findById(id).orElse(null);
+        if(assignedProjects==null){
+            String message="Assignee not Found.";
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+        assignedProjects.setActive(false);
+        this.assignedProjectsRepository.save(assignedProjects);
+        String message="User Removed successfully.";
+        return new ResponseEntity<>(message, HttpStatus.OK);
+
+
     }
 }

@@ -25,7 +25,7 @@ public interface AssignedProjectsService {
 
     public ResponseEntity<AssignedProjects> addUserToATeam(long teamId, AssignedProjectRequestBody assignedProjectRequestBody);
 
-    public ResponseEntity<String> updateCapacityOfUser(long id);
+    public ResponseEntity<String> updateCapacityOfUser(long id,int capacity);
 
     public ResponseEntity<String> removeUserFromTeam(long id);
 
