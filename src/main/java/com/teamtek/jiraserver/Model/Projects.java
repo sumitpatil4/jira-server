@@ -48,9 +48,9 @@ public class Projects {
 
     private LocalDate endDate;
 
-    private int sprintNumber;
+    private int sprintNumber=1;
 
-    private int issueNumber;
+    private int issueNumber=1;
 
     private LocalDateTime timeStamp = LocalDateTime.now();
 }
