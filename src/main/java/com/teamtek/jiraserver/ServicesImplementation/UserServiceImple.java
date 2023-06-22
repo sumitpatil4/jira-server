@@ -184,9 +184,30 @@ public class UserServiceImple implements UserService {
         String message;
 
         Users users1=this.userRepository.findByEmail(email).orElse(null);
-        if(users1!=null){
-            message= "User already exist please login either by Google or use your password.";
-            return new ResponseEntity<>(message,HttpStatus.OK);
+        if(users1!=null) {
+
+            if (users1.getFName() == null && users1.getLName() == null && users1.getPassword() == null) {
+
+                users1.setFName(fname);
+                users1.setLName(lname);
+                BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
+                String pass=bCryptPasswordEncoder.encode(password);
+                users1.setPassword(pass);
+
+                this.userRepository.save(users1);
+
+                UserLoginBody userLoginBody=new UserLoginBody();
+                userLoginBody.setEmail(email);
+                userLoginBody.setPassword(password);
+
+                ResponseEntity<?> userResponseBody=this.loginIdPass(userLoginBody);
+
+                return (ResponseEntity<UserResponseBody>) userResponseBody;
+            }
+            else {
+                message = "User already exist please login either by Google or use your password.";
+                return new ResponseEntity<>(message, HttpStatus.OK);
+            }
         }
 
         if(email==null || fname==null || password==null){
@@ -209,6 +230,13 @@ public class UserServiceImple implements UserService {
         ResponseEntity<?> userResponseBody=this.loginIdPass(userLoginBody);
 
         return (ResponseEntity<UserResponseBody>) userResponseBody;
+    }
+
+    public void addUserToTeam(String email){
+        Users users = new Users();
+        users.setId(UUID.randomUUID().toString());
+        users.setEmail(email);
+        this.userRepository.save(users);
     }
 
 
