@@ -12,4 +12,5 @@ public class AssignedProjectRequestBody {
     private int capacity;
     private LocalDate endDate;
     private long roleId;
+    private long teamId;
 }

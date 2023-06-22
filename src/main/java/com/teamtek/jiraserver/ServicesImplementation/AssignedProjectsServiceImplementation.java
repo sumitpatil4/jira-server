@@ -3,6 +3,7 @@ package com.teamtek.jiraserver.ServicesImplementation;
 import com.teamtek.jiraserver.Model.AssignedProjects;
 import com.teamtek.jiraserver.Model.Teams;
 import com.teamtek.jiraserver.Repository.AssignedProjectsRepository;
+import com.teamtek.jiraserver.Repository.TeamRepository;
 import com.teamtek.jiraserver.Services.AssignedProjectsService;
 import com.teamtek.jiraserver.Utils.AssignedProjectRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,15 @@ public class AssignedProjectsServiceImplementation implements AssignedProjectsSe
 
     @Autowired
     private AssignedProjectsRepository assignedProjectsRepository;
+    @Autowired
+    private TeamRepository teamRepository;
 
 
     @Override
     public ResponseEntity<List<AssignedProjects>> getAllUsersOfATeam(long id) {
-        Teams teams=
-        return null;
+        Teams teams=this.teamRepository.findById(id).orElseThrow();
+        List<AssignedProjects> assignedProjects=this.assignedProjectsRepository.getAllAssignedByTeam(teams);
+        return new ResponseEntity<>(assignedProjects, HttpStatus.OK);
     }
 
     @Override
