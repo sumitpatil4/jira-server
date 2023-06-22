@@ -79,26 +79,13 @@ public class ProjectServiceImplement implements ProjectService {
 
     //get all projects of particular owner by userId
     public ResponseEntity<List<Projects>> findByOwnerId(String id){
-        List<Projects> projects = repository.findByOwnerId(id);
-        List<Projects> out = new ArrayList<>();
-        for (Projects project: projects){
-            if (project.isActive()){
-                out.add(project);
-            }
-        }
-        return new ResponseEntity<List<Projects>>(out, HttpStatus.OK);
+        List<Projects> projects = repository.findByOwnerIdAndActive(id,true);
+        return new ResponseEntity<List<Projects>>(projects, HttpStatus.OK);
     }
 
     // get all the projects
     public ResponseEntity<List<Projects>> findAll(){
-        List<Projects> projects = repository.findAll();
-        List<Projects> out = new ArrayList<>();
-        for (Projects project: projects){
-            if (project.isActive()){
-                out.add(project);
-            }
-        }
-        return new ResponseEntity<List<Projects>>(out, HttpStatus.OK);
+        return new ResponseEntity<List<Projects>>(repository.findAll(), HttpStatus.OK);
     }
 
     //Update project
