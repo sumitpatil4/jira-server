@@ -1,6 +1,7 @@
 package com.teamtek.jiraserver.Services;
 
 import com.teamtek.jiraserver.Model.AssignedProjects;
+import com.teamtek.jiraserver.Utils.AssignedProjectRequestBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,14 +19,14 @@ public interface AssignedProjectsService {
         6.
      */
 
-    public ResponseEntity<List<AssignedProjects>> getAllUsersOfATeam();
+    public ResponseEntity<List<AssignedProjects>> getAllUsersOfATeam(long id);
 
-    public ResponseEntity<AssignedProjects> getDetailofAssigned();
+    public ResponseEntity<AssignedProjects> getDetailofAssigned(long id);
 
-    public ResponseEntity<AssignedProjects> addUserToATeam();
+    public ResponseEntity<AssignedProjects> addUserToATeam(long teamId, AssignedProjectRequestBody assignedProjectRequestBody);
 
-    public ResponseEntity<String> updateCapacityOfUser();
+    public ResponseEntity<String> updateCapacityOfUser(long id);
 
-    public ResponseEntity<String> removeUserFromTeam();
+    public ResponseEntity<String> removeUserFromTeam(long id);
 
 }
