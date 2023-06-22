@@ -23,7 +23,6 @@ public class Teams {
 
     private String name;
 
-
     @ManyToOne
     @JoinColumn(name= "project_id", referencedColumnName="id")
     private Projects project;
@@ -31,7 +30,6 @@ public class Teams {
     private LocalDateTime timeStamp = LocalDateTime.now();
 
     private boolean active=true;
-
 
 
 }
