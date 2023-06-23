@@ -1,9 +1,12 @@
 package com.teamtek.jiraserver.Services;
 
 import com.teamtek.jiraserver.Model.Attachments;
-import com.teamtek.jiraserver.Utils.AttachmentsRequestBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 @Service
 public interface AttachmentsService {
@@ -14,5 +17,6 @@ public interface AttachmentsService {
     3. Delete an Attachment
     4.
      */
-    ResponseEntity<Attachments> addAttachment(long id, AttachmentsRequestBody attachmentsRequestBody);
+    ResponseEntity<Attachments> addAttachment(long id, MultipartFile file, String path);
+    InputStream getResource(String path, String fileName) throws FileNotFoundException;
 }
