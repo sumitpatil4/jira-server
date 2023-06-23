@@ -33,10 +33,10 @@ public class AttachmentsServiceImplementation implements AttachmentsService {
         //random name generate
         String randomID = UUID.randomUUID().toString();
         String fileName1=randomID.concat(filename.substring(filename.lastIndexOf(".")));
-        System.out.println(fileName1);
+
         //FullPath
         String filePath = path+ File.separator+fileName1;
-        System.out.println(filePath);
+//        System.out.println(filePath);
         File f=new File(path);
         if(!f.exists()){
             f.mkdir();
