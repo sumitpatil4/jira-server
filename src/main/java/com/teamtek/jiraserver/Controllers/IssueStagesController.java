@@ -26,6 +26,11 @@ public class IssueStagesController {
         return this.issueStagesService.findByProject(id);
     }
 
+    @GetMapping("/project/least/{id}")
+    public ResponseEntity<IssueStages> findByProjectWithLeastHierarchy(@PathVariable("id") Long id){
+        return this.issueStagesService.findLeastHierarchyStageOfProject(id);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<IssueStages> deleteIssueStages(@PathVariable("id") Long id){
         return this.issueStagesService.deleteIssueStage(id);
