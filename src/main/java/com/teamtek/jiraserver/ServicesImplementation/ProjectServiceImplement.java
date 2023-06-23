@@ -1,16 +1,16 @@
 package com.teamtek.jiraserver.ServicesImplementation;
 
-import com.teamtek.jiraserver.Model.Projects;
-import com.teamtek.jiraserver.Model.Users;
-import com.teamtek.jiraserver.Repository.ProjectRepository;
-import com.teamtek.jiraserver.Repository.UserRepository;
+import com.teamtek.jiraserver.Model.*;
+import com.teamtek.jiraserver.Repository.*;
 import com.teamtek.jiraserver.Services.ProjectService;
 import com.teamtek.jiraserver.Utils.ProjectRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class ProjectServiceImplement implements ProjectService {
@@ -20,6 +20,15 @@ public class ProjectServiceImplement implements ProjectService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SprintRepository sprintRepository;
+
+    @Autowired
+    private IssueStagesRepository issueStagesRepository;
+
+    @Autowired
+    private IssueTypesRepository issueTypesRepository;
+
 
     // Create new project
     public ResponseEntity<Projects> addProject(ProjectRequestBody body){
@@ -28,13 +37,16 @@ public class ProjectServiceImplement implements ProjectService {
             Projects project = new Projects();
             project.setTitle(body.getTitle());
             project.setOwner(owner);
+            System.out.println(owner.getFName());
             project.setDescription(body.getDescription());
             project.setStartDate(body.getStartDate());
             project.setEndDate(body.getEndDate());
-            project.setSprintNumber(body.getSprintNumber());
-            project.setIssueNumber(body.getIssueNumber());
-
+            project.setActiveSprint(null);
             Projects created = repository.save(project);
+
+            createIssueStage(project);
+
+            createIssueTypes(project);
 
             return new ResponseEntity<Projects>(created, HttpStatus.CREATED);
         }catch (Exception e){
@@ -44,9 +56,31 @@ public class ProjectServiceImplement implements ProjectService {
 
     }
 
+    public void createIssueTypes(Projects project){
+        String[] types = {"Bug", "Story", "Task", "Sub task", "Epic"};
+        for (String x: types){
+            IssueTypes issueType = new IssueTypes();
+            issueType.setProject(project);
+            issueType.setTitle(x);
+            issueTypesRepository.save(issueType);
+        }
+    }
+
+    public void createIssueStage(Projects project){
+        String[] stages = {"Done", "In Progress", "To Do"};
+        for (int i=0;i<stages.length;i++){
+            IssueStages issueStages = new IssueStages();
+            issueStages.setProject(project);
+            issueStages.setTitle(stages[i]);
+            issueStages.setHierarchy(i);
+            issueStagesRepository.save(issueStages);
+        }
+    }
+
     //get all projects of particular owner by userId
     public ResponseEntity<List<Projects>> findByOwnerId(String id){
-        return new ResponseEntity<List<Projects>>(repository.findByOwnerId(id), HttpStatus.OK);
+        List<Projects> projects = repository.findByOwnerIdAndActive(id,true);
+        return new ResponseEntity<List<Projects>>(projects, HttpStatus.OK);
     }
 
     // get all the projects
@@ -57,10 +91,8 @@ public class ProjectServiceImplement implements ProjectService {
     //Update project
     public ResponseEntity<Projects> updateProject(ProjectRequestBody body){
         try {
-            Users owner = userRepository.findById(body.getOwner()).orElseThrow(null);
             Projects existingProject = repository.findById(body.getId()).orElseThrow(null);
             existingProject.setTitle(body.getTitle());
-            existingProject.setOwner(owner);
             existingProject.setDescription(body.getDescription());
             existingProject.setStartDate(body.getStartDate());
             existingProject.setEndDate(body.getEndDate());

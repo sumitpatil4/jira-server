@@ -11,17 +11,17 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateIssueBody {
+public class IssuesRequestBody {
+    private Long id;
     private String title;
     private String description;
-    private LocalDate createdDate;
     private LocalDate completionDate;
-    private int storyPoints;
-    private int estimatedTime;
+    private Integer storyPoints;
+    private Integer estimatedTime;
     private Long issueTypeId;
     private Long issueStageId;
-    private Long assignedToId;
-    private Long userId;
+    private String assignedToId;
+    private String createdById;
     private Long projectId;
     private Long parentIssueId;
     private Long sprintId;
