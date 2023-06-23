@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.List;
 
 @Service
 public interface AttachmentsService {
@@ -19,4 +20,8 @@ public interface AttachmentsService {
      */
     ResponseEntity<Attachments> addAttachment(long id, MultipartFile file, String path);
     InputStream getResource(String path, String fileName) throws FileNotFoundException;
+
+    ResponseEntity<List<Attachments>> getAttachmentBasedOnIssue(long id);
+
+    ResponseEntity<String> removeAttachment(long id);
 }
