@@ -5,10 +5,9 @@ import com.teamtek.jiraserver.Services.IssuesService;
 import com.teamtek.jiraserver.Utils.IssuesRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/issues")
@@ -29,5 +28,25 @@ public class IssuesController {
     @PostMapping("/subtask")
     public ResponseEntity<Issues> createNewSubtask(@RequestBody IssuesRequestBody issuesRequestBody){
         return this.issuesService.createNewSubtask(issuesRequestBody);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Issues>> getAllIssues(){
+        return this.issuesService.getAllIssues();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Issues> getIssueById(@PathVariable("id") Long id){
+        return this.issuesService.getIssueById(id);
+    }
+
+    @PutMapping
+    public ResponseEntity<Issues> updateIssues(@RequestBody IssuesRequestBody issuesRequestBody){
+        return this.issuesService.updateIssue(issuesRequestBody);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Issues> deleteIssues(@PathVariable("id") Long id){
+        return this.issuesService.deleteIssue(id);
     }
 }

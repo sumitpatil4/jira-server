@@ -13,4 +13,8 @@ public interface IssuesService {
     ResponseEntity<Issues> createNewTask(IssuesRequestBody issuesRequestBody);
     ResponseEntity<Issues> createNewEpic(IssuesRequestBody issuesRequestBody);
     ResponseEntity<Issues> createNewSubtask(IssuesRequestBody issuesRequestBody);
+    ResponseEntity<Issues> updateIssue(IssuesRequestBody issuesRequestBody);
+    ResponseEntity<Issues> deleteIssue(Long id);
+    ResponseEntity<List<Issues>> getAllIssues();
+    ResponseEntity<Issues> getIssueById(Long id);
 }

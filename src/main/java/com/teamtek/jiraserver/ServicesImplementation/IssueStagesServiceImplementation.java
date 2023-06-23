@@ -7,6 +7,8 @@ import com.teamtek.jiraserver.Repository.ProjectRepository;
 import com.teamtek.jiraserver.Services.IssueStagesService;
 import com.teamtek.jiraserver.Utils.IssueStagesRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -72,8 +74,9 @@ public class IssueStagesServiceImplementation implements IssueStagesService {
     public ResponseEntity<IssueStages> findLeastHierarchyStageOfProject(Long id) {
         try{
             Projects projects = this.projectRepository.findById(id).orElseThrow(null);
-            IssueStages issueStages = issueStagesRepository.findIssueStageWithLeastHierarchy(projects.getId());
-            return new ResponseEntity<>(issueStages, HttpStatus.OK);
+            Pageable pageable = PageRequest.of(0,1);
+            List<IssueStages> issueStages = issueStagesRepository.findIssueStageWithLeastHierarchy(projects, pageable);
+            return new ResponseEntity<>(issueStages.get(0), HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);

@@ -12,11 +12,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IssuesRequestBody {
+    private Long id;
     private String title;
     private String description;
     private LocalDate completionDate;
-    private int storyPoints;
-    private int estimatedTime;
+    private Integer storyPoints;
+    private Integer estimatedTime;
     private Long issueTypeId;
     private Long issueStageId;
     private String assignedToId;
