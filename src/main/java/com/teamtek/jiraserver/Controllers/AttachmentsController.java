@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @RestController
-@RequestMapping("api/attachemnts")
+@RequestMapping("api/attachements")
 public class AttachmentsController {
 
     @Autowired

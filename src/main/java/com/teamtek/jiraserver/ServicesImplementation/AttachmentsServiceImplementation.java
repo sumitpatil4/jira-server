@@ -47,7 +47,7 @@ public class AttachmentsServiceImplementation implements AttachmentsService {
             throw new RuntimeException(e);
         }
 //        change the url based on post
-        String url="http://localhost:4545/api/items/attachments/";
+        String url="http://localhost:4545/api/attachements/file/";
         Attachments attachments=new Attachments();
         attachments.setFile(url+fileName1);
         attachments.setIssue(issues);
