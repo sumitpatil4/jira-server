@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -62,5 +64,27 @@ public class AttachmentsServiceImplementation implements AttachmentsService {
         String fullPath = path+File.separator+fileName;
         InputStream is=new FileInputStream(fullPath);
         return is;
+    }
+
+    @Override
+    public ResponseEntity<List<Attachments>> getAttachmentBasedOnIssue(long id) {
+        Issues issues = issuesRepository.findById(id).orElseThrow();
+        List<Attachments> attachments = attachmentsRepository.listOfAttachmentsByIssue(issues);
+        return new ResponseEntity<>(attachments, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<String> removeAttachment(long id) {
+        Attachments attachments = attachmentsRepository.findById(id).orElseThrow();
+
+        if(attachments==null){
+            String msg = "Attachment Does Not Exist";
+            return new ResponseEntity<>(msg,HttpStatus.OK);
+        }
+        attachments.setActive(false);
+        this.attachmentsRepository.save(attachments);
+        String msg = "Attachment Removed Successfully";
+
+        return new ResponseEntity<>(msg,HttpStatus.OK);
     }
 }
