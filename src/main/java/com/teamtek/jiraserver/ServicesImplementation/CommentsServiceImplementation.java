@@ -50,6 +50,7 @@ public class CommentsServiceImplementation implements CommentsService {
         try{
             Comments comment=commentsRepository.findById(commentId).orElseThrow(null);
             comment.setActive(false);
+            commentsRepository.save(comment);
             return new ResponseEntity<>(comment,HttpStatus.OK);
         }
         catch(Exception e){
@@ -62,6 +63,7 @@ public class CommentsServiceImplementation implements CommentsService {
         try{
             Comments comment=commentsRepository.findById(commentId).orElseThrow(null);
             comment.setComment(body.getComment());
+            commentsRepository.save(comment);
             return new ResponseEntity<>(comment,HttpStatus.OK);
         }
         catch(Exception e){
