@@ -1,6 +1,7 @@
 package com.teamtek.jiraserver.Services;
 
 import com.teamtek.jiraserver.Model.Teams;
+import com.teamtek.jiraserver.Utils.TeamRequestBody;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.Optional;
 public interface TeamService {
     public ResponseEntity<List<Teams>> getAllTeams();
     public ResponseEntity<Optional<Teams>> getTeamById(Long id);
-    public ResponseEntity<Teams> saveTeam(Teams team);
+    public ResponseEntity<Teams> addTeam(TeamRequestBody body);
     public ResponseEntity<Teams> deleteTeams(Long id);
 
 }
