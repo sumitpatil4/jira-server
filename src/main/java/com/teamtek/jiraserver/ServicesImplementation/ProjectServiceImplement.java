@@ -57,13 +57,26 @@ public class ProjectServiceImplement implements ProjectService {
     }
 
     public void createIssueTypes(Projects project){
-        String[] types = {"Bug", "Story", "Task", "Sub task", "Epic"};
+        String[] types = {"Bug", "Story", "Task",};
         for (String x: types){
             IssueTypes issueType = new IssueTypes();
             issueType.setProject(project);
             issueType.setTitle(x);
+            issueType.setLevel(2);
             issueTypesRepository.save(issueType);
         }
+
+        IssueTypes issueTypeEpic = new IssueTypes();
+        issueTypeEpic.setProject(project);
+        issueTypeEpic.setTitle("Epic");
+        issueTypeEpic.setLevel(1);
+        issueTypesRepository.save(issueTypeEpic);
+
+        IssueTypes issueTypeSubtask = new IssueTypes();
+        issueTypeSubtask.setProject(project);
+        issueTypeSubtask.setTitle("Subtask");
+        issueTypeSubtask.setLevel(3);
+        issueTypesRepository.save(issueTypeSubtask);
     }
 
     public void createIssueStage(Projects project){

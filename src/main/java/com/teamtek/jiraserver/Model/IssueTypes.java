@@ -25,6 +25,7 @@ public class IssueTypes {
 
     private String title;
 
+    private Integer level;
 
     @ManyToOne
     @JoinColumn(name= "project_id", referencedColumnName="id")

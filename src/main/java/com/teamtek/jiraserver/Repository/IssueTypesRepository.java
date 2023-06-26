@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface IssueTypesRepository extends JpaRepository<IssueTypes,Long> {
     List<IssueTypes> findAllByProjectAndActive(Projects projects, Boolean active);
+    List<IssueTypes> findAllByProjectAndLevelAndActive(Projects projects, Integer level, boolean active);
 }
