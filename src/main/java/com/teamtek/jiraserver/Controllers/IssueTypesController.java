@@ -28,6 +28,11 @@ public class IssueTypesController {
         return this.issueTypesService.findByProject(projectId);
     }
 
+    @GetMapping("/project/{id}/level/{level}")
+    public ResponseEntity<List<IssueTypes>> findByProjectAndLevel(@PathVariable("id") Long projectId, @PathVariable("level") Integer level){
+        return this.issueTypesService.findByProjectAndLevel(projectId, level);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<IssueTypes> deleteIssueType(@PathVariable("id") Long id){
         return this.issueTypesService.deleteIssueType(id);

@@ -15,4 +15,6 @@ public interface IssueTypesService {
     ResponseEntity<List<IssueTypes>> findByProject(Long projectId);
 
     ResponseEntity<IssueTypes> deleteIssueType(Long id);
+
+    ResponseEntity<List<IssueTypes>> findByProjectAndLevel(Long projectId, Integer level);
 }
