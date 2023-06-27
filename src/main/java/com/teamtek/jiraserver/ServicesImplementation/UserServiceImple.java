@@ -3,7 +3,9 @@ package com.teamtek.jiraserver.ServicesImplementation;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.teamtek.jiraserver.Configuration.Security.JwtTokenUtils;
+import com.teamtek.jiraserver.Model.JiraRole;
 import com.teamtek.jiraserver.Model.Users;
+import com.teamtek.jiraserver.Repository.JiraRoleRepository;
 import com.teamtek.jiraserver.Repository.UserRepository;
 import com.teamtek.jiraserver.Services.UserService;
 
@@ -30,7 +32,8 @@ public class UserServiceImple implements UserService {
     private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
-
+    @Autowired
+    private JiraRoleRepository jiraRoleRepository;
     @Autowired
     JwtTokenUtils jwtTokenUtil;
 
@@ -40,7 +43,7 @@ public class UserServiceImple implements UserService {
             Users user = decodeGoogleToken(googleAuthToken.getToken());
             String accessToken = jwtTokenUtil.generateAccessToken(user);
 
-            UserResponseBody userResponseBody = new UserResponseBody(user.getId(),user.getFName(),user.getLName(), user.getEmail(), user.getProfileImg(), user.getRole(),accessToken);
+            UserResponseBody userResponseBody = new UserResponseBody(user.getId(),user.getFName(),user.getLName(), user.getEmail(), user.getProfileImg(), user.getJiraRole(),accessToken);
 
             return new ResponseEntity<>(userResponseBody, HttpStatus.OK);
         }
@@ -68,7 +71,7 @@ public class UserServiceImple implements UserService {
 
             if(check){
                 String accessToken = jwtTokenUtil.generateAccessToken(user);
-                UserResponseBody userResponseBody = new UserResponseBody(user.getId(),user.getFName(),user.getLName(), user.getEmail(), user.getProfileImg(), user.getRole(),accessToken);
+                UserResponseBody userResponseBody = new UserResponseBody(user.getId(),user.getFName(),user.getLName(), user.getEmail(), user.getProfileImg(), user.getJiraRole(),accessToken);
                 return new ResponseEntity<>(userResponseBody, HttpStatus.OK);
             }
             return null;
@@ -169,7 +172,8 @@ public class UserServiceImple implements UserService {
         newuser.setFName(map.get("given_name"));
         newuser.setLName(map.get("family_name"));
         newuser.setProfileImg(map.get("picture"));
-        newuser.setRole("USER");
+        JiraRole jiraRole=this.jiraRoleRepository.findById(1).orElse(null);
+        newuser.setJiraRole(jiraRole);
         Users users1=this.userRepository.save(newuser);
 
         return users1;
@@ -217,7 +221,8 @@ public class UserServiceImple implements UserService {
         users.setId(UUID.randomUUID().toString());
         users.setFName(fname);
         users.setLName(lname);
-        users.setEmail(email);
+        users.setEmail(email);JiraRole jiraRole=this.jiraRoleRepository.findById(1).orElse(null);
+        users.setJiraRole(jiraRole);
         BCryptPasswordEncoder bCryptPasswordEncoder=new BCryptPasswordEncoder();
         String pass=bCryptPasswordEncoder.encode(password);
         users.setPassword(pass);

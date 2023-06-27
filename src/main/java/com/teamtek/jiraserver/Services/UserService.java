@@ -32,4 +32,5 @@ public interface UserService {
 
 
     ResponseEntity<?> registerNewUser(UserRegisterBody userRegisterBody);
+//    ?update JiraRole
 }

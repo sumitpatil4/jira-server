@@ -33,13 +33,16 @@ public class Users implements UserDetails {
     @Email(message = "enter valid email address")
     private String email;
     private String profileImg;
-    private String role="USER";
+    @ManyToOne
+    @JoinColumn(name= "role_id", referencedColumnName="id")
+    private JiraRole jiraRole;
     private String password;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorityList = new ArrayList<>();
         authorityList.add(new SimpleGrantedAuthority("USER"));
-        if(this.role.equals("ADMIN")){
+        if(this.jiraRole.equals("ADMIN")){
             authorityList.add(new SimpleGrantedAuthority("ADMIN"));
         }
         return authorityList;
