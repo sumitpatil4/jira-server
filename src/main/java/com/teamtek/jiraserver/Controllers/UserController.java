@@ -46,6 +46,9 @@ public class UserController {
     public ResponseEntity<String> setPassword(@RequestBody SetPassUserBody setPassUserBody){
         return userService.setPassword(setPassUserBody);
     }
-
+    @PutMapping("/updateUserRole/{userId}/roleId/{roleId}")
+    public ResponseEntity<String> updateUserRole(@PathVariable String userId,@PathVariable Integer roleId){
+        return userService.updateJiraRole(userId,roleId);
+    }
 
 }
