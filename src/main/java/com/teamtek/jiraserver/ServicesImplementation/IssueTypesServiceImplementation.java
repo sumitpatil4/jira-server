@@ -64,4 +64,16 @@ public class IssueTypesServiceImplementation implements IssueTypesService {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Override
+    public ResponseEntity<List<IssueTypes>> findByProjectAndLevel(Long projectId, Integer level) {
+        try{
+            Projects projects = this.projectRepository.findById(projectId).orElseThrow(null);
+            List<IssueTypes> issueTypes = issueTypesRepository.findAllByProjectAndLevelAndActive(projects,level, true);
+            return new ResponseEntity<>(issueTypes, HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
