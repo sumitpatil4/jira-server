@@ -14,6 +14,8 @@ import java.util.List;
 public interface IssuesRepository extends JpaRepository<Issues, Long> {
     List<Issues> findBySprint(Sprints sprint);
 
+    List<Issues> findByParentIssue(Issues parentIssue);
     @Query("SELECT count(*) from Issues i where i.active = true AND i.sprint = :sprint")
     Integer noOfIssuesBySprint(@Param("sprint") Sprints sprint);
+
 }
