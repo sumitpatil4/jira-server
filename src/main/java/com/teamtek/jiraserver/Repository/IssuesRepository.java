@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface IssuesRepository extends JpaRepository<Issues, Long> {
     List<Issues> findBySprint(Sprints sprint);
+
+    List<Issues> findByParentIssue(Long id);
 }

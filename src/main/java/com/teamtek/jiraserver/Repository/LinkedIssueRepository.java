@@ -16,4 +16,7 @@ public interface LinkedIssueRepository extends JpaRepository<LinkedIssue, Long> 
 
     List<LinkedIssue> findAllByCauseIssueAndActive(Issues causeIssue, boolean active);
     List<LinkedIssue> findAllByNeedIssueAndActive(Issues needIssue, boolean active);
+
+    List<LinkedIssue> findAllByCauseIssue(Issues causeIssue);
+    List<LinkedIssue> findAllByNeedIssue(Issues needIssue);
 }

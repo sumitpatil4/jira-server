@@ -28,6 +28,9 @@ public class IssuesServiceImplementation implements IssuesService {
     @Autowired
     private SprintRepository sprintRepository;
 
+    @Autowired
+    private LinkedIssueRepository linkedIssueRepository;
+
     @Override
     public ResponseEntity<Issues> createNewTask(IssuesRequestBody issuesRequestBody) {
         try {
@@ -128,7 +131,8 @@ public class IssuesServiceImplementation implements IssuesService {
 
     @Override
     public ResponseEntity<Issues> updateIssue(IssuesRequestBody issuesRequestBody) {
-        try{
+        try
+        {
             Issues issues = this.issuesRepository.findById(issuesRequestBody.getId()).orElseThrow(null);
             if(issuesRequestBody.getTitle()!=null){
                 issues.setTitle(issuesRequestBody.getTitle());
@@ -164,23 +168,78 @@ public class IssuesServiceImplementation implements IssuesService {
             this.issuesRepository.save(issues);
             return new ResponseEntity<>(issues, HttpStatus.OK);
         }
-        catch (Exception e){
+        catch (Exception e)
+        {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
+
     @Override
-    public ResponseEntity<Issues> deleteIssue(Long id) {
-        try {
+    public ResponseEntity<Issues> deleteIssue(Long id)
+    {
+        try
+        {
             Issues issues = this.issuesRepository.findById(id).orElseThrow(null);
+            IssueTypes issueTypes=issues.getIssueType();
+            Integer level=issueTypes.getLevel();
+            List<Issues> childIssues=this.issuesRepository.findByParentIssue(id);
+            List<LinkedIssue> causeIssues=this.linkedIssueRepository.findAllByCauseIssue(issues);
+            List<LinkedIssue> needIssues=this.linkedIssueRepository.findAllByNeedIssue(issues);
+            for(int i=0; i<causeIssues.size(); i++){
+                causeIssues.get(i).setActive(false);
+                this.linkedIssueRepository.save(causeIssues.get(i));
+            }
+            for(int i=0; i<needIssues.size(); i++){
+                needIssues.get(i).setActive(false);
+                this.linkedIssueRepository.save(needIssues.get(i));
+            }
+            if(level==1)
+            {
+                for (int i=0;i<childIssues.size();i++)
+                {
+                    childIssues.get(i).setParentIssue(null);
+                    this.issuesRepository.save(childIssues.get(i));
+                    causeIssues=this.linkedIssueRepository.findAllByCauseIssue(childIssues.get(i));
+                    needIssues=this.linkedIssueRepository.findAllByNeedIssue(childIssues.get(i));
+                    for(int j=0; j<causeIssues.size(); j++){
+                        causeIssues.get(j).setActive(false);
+                        this.linkedIssueRepository.save(causeIssues.get(j));
+                    }
+                    for(int j=0; j<needIssues.size(); j++){
+                        needIssues.get(j).setActive(false);
+                        this.linkedIssueRepository.save(needIssues.get(j));
+                    }
+                }
+            }
+            if(level==2)
+            {
+                for (int i=0;i<childIssues.size();i++)
+                {
+                    childIssues.get(i).setActive(false);
+                    this.issuesRepository.save(childIssues.get(i));
+                    causeIssues=this.linkedIssueRepository.findAllByCauseIssue(childIssues.get(i));
+                    needIssues=this.linkedIssueRepository.findAllByNeedIssue(childIssues.get(i));
+                    for(int j=0; j<causeIssues.size(); j++){
+                        causeIssues.get(j).setActive(false);
+                        this.linkedIssueRepository.save(causeIssues.get(j));
+                    }
+                    for(int j=0; j<needIssues.size(); j++){
+                        needIssues.get(j).setActive(false);
+                        this.linkedIssueRepository.save(needIssues.get(j));
+                    }
+                }
+            }
             issues.setActive(false);
             this.issuesRepository.save(issues);
             return new ResponseEntity<>(issues, HttpStatus.OK);
         }
-        catch (Exception e){
+        catch (Exception e)
+        {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
 
     @Override
     public ResponseEntity<List<Issues>> getAllIssues() {
@@ -193,6 +252,7 @@ public class IssuesServiceImplementation implements IssuesService {
         }
     }
 
+
     @Override
     public ResponseEntity<Issues> getIssueById(Long id) {
         try {
@@ -204,3 +264,4 @@ public class IssuesServiceImplementation implements IssuesService {
         }
     }
 }
+
