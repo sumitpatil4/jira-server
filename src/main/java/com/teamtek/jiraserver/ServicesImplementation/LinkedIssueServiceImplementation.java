@@ -24,7 +24,7 @@ public class LinkedIssueServiceImplementation implements LinkedIssueService {
     public ResponseEntity<LinkedIssue> createNewLinkedIssue(LinkedIssueBody linkedIssueBody) {
         try {
             Issues causeIssue = this.issuesRepository.findById(linkedIssueBody.getCauseIssueId()).orElseThrow(null);
-            Issues needIssue = this.issuesRepository.findById(linkedIssueBody.getCauseIssueId()).orElseThrow(null);
+            Issues needIssue = this.issuesRepository.findById(linkedIssueBody.getNeedIssueId()).orElseThrow(null);
             LinkedIssue linkedIssue = new LinkedIssue();
             linkedIssue.setCauseIssue(causeIssue);
             linkedIssue.setNeedIssue(needIssue);

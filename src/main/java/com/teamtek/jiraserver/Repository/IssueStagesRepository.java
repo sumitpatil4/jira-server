@@ -13,6 +13,6 @@ import java.util.List;
 @Repository
 public interface IssueStagesRepository extends JpaRepository<IssueStages,Long> {
     List<IssueStages> findAllByProjectAndActive(Projects projects, boolean active);
-    @Query("SELECT s FROM IssueStages s WHERE s.active = true AND s.project = :project ORDER BY s.hierarchy ASC")
+    @Query("SELECT s FROM IssueStages s WHERE s.active = true AND s.project = :project ORDER BY s.hierarchy DESC")
     List<IssueStages> findIssueStageWithLeastHierarchy(@Param("project") Projects project, Pageable pageable);
 }

@@ -17,4 +17,6 @@ public interface IssuesService {
     ResponseEntity<Issues> deleteIssue(Long id);
     ResponseEntity<List<Issues>> getAllIssues();
     ResponseEntity<Issues> getIssueById(Long id);
+    ResponseEntity<Integer> noOfIssuesBySprint(Long id);
+    ResponseEntity<Issues> pushIssueToBacklog(Long id);
 }
