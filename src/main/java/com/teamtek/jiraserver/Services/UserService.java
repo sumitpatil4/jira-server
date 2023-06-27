@@ -16,21 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface UserService {
 
     public ResponseEntity<?> loginGoogle(GoogleAuthToken googleAuthToken);
-
     public ResponseEntity<?> loginIdPass( UserLoginBody userLoginBody);
-
     public ResponseEntity<Boolean> checkNullPass(String userId);
-
     public ResponseEntity<String> setPassword(SetPassUserBody setPassUserBody);
-
     public ResponseEntity<String> updatePassword(UpdatePassUserBody updatePassUserBody);
-
-
     public ResponseEntity<Users> getUserByEmail(String email);
-
     Users decodeGoogleToken(String token);
-
-
     ResponseEntity<?> registerNewUser(UserRegisterBody userRegisterBody);
-//    ?update JiraRole
+    ResponseEntity<String> updateJiraRole(String userId, Integer jiraRoleId);
 }

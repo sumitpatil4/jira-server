@@ -237,6 +237,26 @@ public class UserServiceImple implements UserService {
         return (ResponseEntity<UserResponseBody>) userResponseBody;
     }
 
+
+
+
+    @Override
+    public ResponseEntity<String> updateJiraRole(String userId, Integer jiraRoleId) {
+        try {
+            Users users = this.userRepository.findById(userId).orElseThrow();
+            JiraRole jiraRole = this.jiraRoleRepository.findById(jiraRoleId).orElseThrow();
+            users.setJiraRole(jiraRole);
+            this.userRepository.save(users);
+            String message = "Role Updated Successfully";
+            return new ResponseEntity<>(message,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+
+
+
+    }
+
     public void addUserToTeam(String email){
         Users users = new Users();
         users.setId(UUID.randomUUID().toString());

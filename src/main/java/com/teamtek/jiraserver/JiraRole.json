@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "role": "JiraUser"
+  },
+  {
+    "id": 2,
+    "role": "JiraAdmin"
+  },
+  {
+    "id": 3,
+    "role": "JiraProjectManager"
+  },
+  {
+    "id": 4,
+    "role": "JiraReadOnly"
+  }
+]
