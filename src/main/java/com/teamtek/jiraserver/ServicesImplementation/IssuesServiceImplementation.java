@@ -188,8 +188,8 @@ public class IssuesServiceImplementation implements IssuesService {
     @Override
     public ResponseEntity<Issues> deleteIssue(Long id)
     {
-//        try
-//        {
+        try
+        {
             Issues issues = this.issuesRepository.findById(id).orElseThrow(null);
             IssueTypes issueTypes=issues.getIssueType();
             Integer level=issueTypes.getLevel();
@@ -244,11 +244,11 @@ public class IssuesServiceImplementation implements IssuesService {
             this.issuesRepository.save(issues);
             return new ResponseEntity<>(issues, HttpStatus.OK);
         }
-//        catch (Exception e)
-//        {
-//            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-//        }
-//    }
+        catch (Exception e)
+        {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
     @Override
