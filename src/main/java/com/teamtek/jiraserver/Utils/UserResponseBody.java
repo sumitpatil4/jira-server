@@ -1,6 +1,7 @@
 package com.teamtek.jiraserver.Utils;
 
 
+import com.teamtek.jiraserver.Model.JiraRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class UserResponseBody {
     private String lName;
     private String email;
     private String profileImg;
-    private String role;
+    private JiraRole jiraRole;
     private String token;
 
 }

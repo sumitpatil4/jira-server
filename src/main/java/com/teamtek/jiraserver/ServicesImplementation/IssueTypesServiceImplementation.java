@@ -24,13 +24,12 @@ public class IssueTypesServiceImplementation implements IssueTypesService {
 
     @Override
     public ResponseEntity<IssueTypes> createNewIssueType(IssueTypesRequestBody issueTypesRequestBody) {
-
-
         try{
             Projects projects =this.projectRepository.findById(issueTypesRequestBody.getProjectId()).orElseThrow(null);
             IssueTypes issueTypes=new IssueTypes();
             issueTypes.setTitle(issueTypesRequestBody.getTitle());
             issueTypes.setProject(projects);
+            issueTypes.setLevel(issueTypesRequestBody.getLevel());
             issueTypesRepository.save(issueTypes);
             return new ResponseEntity<>(issueTypes, HttpStatus.CREATED);
         }
@@ -43,7 +42,6 @@ public class IssueTypesServiceImplementation implements IssueTypesService {
     public ResponseEntity<List<IssueTypes>> findByProject(Long projectId) {
         try{
             Projects projects = this.projectRepository.findById(projectId).orElseThrow(null);
-
             List<IssueTypes> issueTypes = issueTypesRepository.findAllByProjectAndActive(projects,true);
             return new ResponseEntity<>(issueTypes, HttpStatus.OK);
         }

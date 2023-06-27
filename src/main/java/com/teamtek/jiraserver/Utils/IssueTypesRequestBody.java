@@ -14,4 +14,5 @@ public class IssueTypesRequestBody {
     private Long id;
     private String title;
     private Long projectId;
+    private Integer level;
 }

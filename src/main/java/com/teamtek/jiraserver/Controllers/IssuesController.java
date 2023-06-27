@@ -45,8 +45,18 @@ public class IssuesController {
         return this.issuesService.updateIssue(issuesRequestBody);
     }
 
+    @PutMapping("/pushToBacklog/{id}")
+    public ResponseEntity<Issues> pushIssuesToBacklog(@PathVariable("id") Long id){
+        return this.issuesService.pushIssueToBacklog(id);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Issues> deleteIssues(@PathVariable("id") Long id){
         return this.issuesService.deleteIssue(id);
+    }
+
+    @GetMapping("/noOfIssuesBySprint/{id}")
+    public ResponseEntity<Integer> noOfIssuesBySprint(@PathVariable("id") Long id){
+        return this.issuesService.noOfIssuesBySprint(id);
     }
 }

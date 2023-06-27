@@ -14,27 +14,27 @@ public class RolesController {
     @Autowired
     private RolesService rolesService;
 
-    @PostMapping()
+    @PostMapping("/createRole")
     public ResponseEntity<Roles> createNewRole(@RequestBody Roles roles){
         return this.rolesService.createNewRole(roles);
     }
 
-    @GetMapping()
+    @GetMapping("/getAllRoles")
     public ResponseEntity<List<Roles>> getAllRoles(){
         return this.rolesService.getAllRoles();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/getRoleById/{id}")
     public ResponseEntity<Roles> getRolesById(@PathVariable("id") Long id){
         return this.rolesService.getRolesById(id);
     }
 
-    @PutMapping("/{id}/{role}")
+    @PutMapping("/updateRole/{id}/{role}")
     public ResponseEntity<Roles> updateRoles(@PathVariable("id") Long id, @PathVariable("role") String role){
         return this.rolesService.updateRoles(id, role);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deleteRole/{id}")
     public ResponseEntity<Roles> deleteRoles(@PathVariable("id") Long id){
         return this.rolesService.deleteRoles(id);
     }
