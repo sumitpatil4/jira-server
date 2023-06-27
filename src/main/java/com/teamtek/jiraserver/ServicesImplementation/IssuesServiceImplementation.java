@@ -41,6 +41,12 @@ public class IssuesServiceImplementation implements IssuesService {
             Projects project = this.projectRepository.findById(issuesRequestBody.getProjectId()).orElseThrow(null);
             issues.setProject(project);
             issues.setIssueName("I "+project.getIssueNumber());
+            if(issuesRequestBody.getDescription()!=null){
+                issues.setDescription(issuesRequestBody.getDescription());
+            }
+            if(issuesRequestBody.getCompletionDate()!=null){
+                issues.setCompletionDate(issuesRequestBody.getCompletionDate());
+            }
             if (issuesRequestBody.getSprintId() != null) {
                 Sprints sprint = this.sprintRepository.findById(issuesRequestBody.getSprintId()).orElseThrow(null);
             }
@@ -71,12 +77,12 @@ public class IssuesServiceImplementation implements IssuesService {
         try {
             Issues issues = new Issues();
             issues.setTitle(issuesRequestBody.getTitle());
-            IssueTypes issueTypes = this.issueTypesRepository.findById(issuesRequestBody.getIssueTypeId()).orElseThrow(null);
+            Projects project = this.projectRepository.findById(issuesRequestBody.getProjectId()).orElseThrow(null);
+            issues.setProject(project);
+            IssueTypes issueTypes = this.issueTypesRepository.findAllByProjectAndLevelAndActive(project, 1, true).get(0);
             issues.setIssueType(issueTypes);
             Users createdBy = this.userRepository.findById(issuesRequestBody.getCreatedById()).orElseThrow(null);
             issues.setCreatedBy(createdBy);
-            Projects project = this.projectRepository.findById(issuesRequestBody.getProjectId()).orElseThrow(null);
-            issues.setProject(project);
             issues.setIssueName("I "+project.getIssueNumber());
             if(issuesRequestBody.getDescription()!=null){
                 issues.setDescription(issuesRequestBody.getDescription());
@@ -98,24 +104,28 @@ public class IssuesServiceImplementation implements IssuesService {
         try {
             Issues issues = new Issues();
             issues.setTitle(issuesRequestBody.getTitle());
-            IssueTypes issueTypes = this.issueTypesRepository.findById(issuesRequestBody.getIssueTypeId()).orElseThrow(null);
+            Projects project = this.projectRepository.findById(issuesRequestBody.getProjectId()).orElseThrow(null);
+            issues.setProject(project);
+            IssueTypes issueTypes = this.issueTypesRepository.findAllByProjectAndLevelAndActive(project, 3, true).get(0);
             issues.setIssueType(issueTypes);
             Users createdBy = this.userRepository.findById(issuesRequestBody.getCreatedById()).orElseThrow(null);
             issues.setCreatedBy(createdBy);
-            Projects project = this.projectRepository.findById(issuesRequestBody.getProjectId()).orElseThrow(null);
-            issues.setProject(project);
             issues.setIssueName("I "+project.getIssueNumber());
             Issues parentIssue = this.issuesRepository.findById(issuesRequestBody.getParentIssueId()).orElseThrow(null);
+            if(parentIssue.getAssignedTo()!=null) {
+                issues.setAssignedTo(parentIssue.getAssignedTo());
+            }
             issues.setParentIssue(parentIssue);
             issues.setEstimatedTime(issuesRequestBody.getEstimatedTime());
             //Logic to add issue stage
             Pageable pageable = PageRequest.of(0,1);
             IssueStages issueStages = issueStagesRepository.findIssueStageWithLeastHierarchy(project, pageable).get(0);
             issues.setIssueStage(issueStages);
-
+            if(issuesRequestBody.getDescription()!=null){
+                issues.setDescription(issuesRequestBody.getDescription());
+            }
             if(parentIssue.getSprint()!=null) {
                 issues.setSprint(parentIssue.getSprint());
-                issues.setAssignedTo(parentIssue.getAssignedTo());
             }
             project.setIssueNumber(project.getIssueNumber()+1);
             this.projectRepository.save(project);
@@ -197,6 +207,31 @@ public class IssuesServiceImplementation implements IssuesService {
     public ResponseEntity<Issues> getIssueById(Long id) {
         try {
             Issues issues = this.issuesRepository.findById(id).orElseThrow(null);
+            return new ResponseEntity<>(issues, HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Override
+    public ResponseEntity<Integer> noOfIssuesBySprint(Long id) {
+        try{
+            Sprints sprints = this.sprintRepository.findById(id).orElseThrow(null);
+            Integer noOfIssues = this.issuesRepository.noOfIssuesBySprint(sprints);
+            return new ResponseEntity<>(noOfIssues, HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Override
+    public ResponseEntity<Issues> pushIssueToBacklog(Long id) {
+        try {
+            Issues issues = this.issuesRepository.findById(id).orElseThrow(null);
+            issues.setSprint(null);
+            this.issuesRepository.save(issues);
             return new ResponseEntity<>(issues, HttpStatus.OK);
         }
         catch (Exception e){
