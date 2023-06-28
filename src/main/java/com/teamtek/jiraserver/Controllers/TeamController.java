@@ -2,6 +2,7 @@ package com.teamtek.jiraserver.Controllers;
 
 import com.teamtek.jiraserver.Model.Teams;
 import com.teamtek.jiraserver.Services.TeamService;
+import com.teamtek.jiraserver.Utils.TeamRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +30,8 @@ public class TeamController {
         }
 
         @PostMapping
-        public ResponseEntity<Teams> saveTeam(@RequestBody Teams team) {
-           return teamService.saveTeam(team);
+        public ResponseEntity<Teams> addTeam(@RequestBody TeamRequestBody body) {
+           return teamService.addTeam(body);
         }
 
         @DeleteMapping("/{id}")

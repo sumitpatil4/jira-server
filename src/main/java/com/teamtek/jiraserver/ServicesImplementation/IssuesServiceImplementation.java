@@ -28,6 +28,9 @@ public class IssuesServiceImplementation implements IssuesService {
     @Autowired
     private SprintRepository sprintRepository;
 
+    @Autowired
+    private LinkedIssueRepository linkedIssueRepository;
+
     @Override
     public ResponseEntity<Issues> createNewTask(IssuesRequestBody issuesRequestBody) {
         try {
@@ -41,6 +44,12 @@ public class IssuesServiceImplementation implements IssuesService {
             Projects project = this.projectRepository.findById(issuesRequestBody.getProjectId()).orElseThrow(null);
             issues.setProject(project);
             issues.setIssueName("I "+project.getIssueNumber());
+            if(issuesRequestBody.getDescription()!=null){
+                issues.setDescription(issuesRequestBody.getDescription());
+            }
+            if(issuesRequestBody.getCompletionDate()!=null){
+                issues.setCompletionDate(issuesRequestBody.getCompletionDate());
+            }
             if (issuesRequestBody.getSprintId() != null) {
                 Sprints sprint = this.sprintRepository.findById(issuesRequestBody.getSprintId()).orElseThrow(null);
             }
@@ -71,12 +80,12 @@ public class IssuesServiceImplementation implements IssuesService {
         try {
             Issues issues = new Issues();
             issues.setTitle(issuesRequestBody.getTitle());
-            IssueTypes issueTypes = this.issueTypesRepository.findById(issuesRequestBody.getIssueTypeId()).orElseThrow(null);
+            Projects project = this.projectRepository.findById(issuesRequestBody.getProjectId()).orElseThrow(null);
+            issues.setProject(project);
+            IssueTypes issueTypes = this.issueTypesRepository.findAllByProjectAndLevelAndActive(project, 1, true).get(0);
             issues.setIssueType(issueTypes);
             Users createdBy = this.userRepository.findById(issuesRequestBody.getCreatedById()).orElseThrow(null);
             issues.setCreatedBy(createdBy);
-            Projects project = this.projectRepository.findById(issuesRequestBody.getProjectId()).orElseThrow(null);
-            issues.setProject(project);
             issues.setIssueName("I "+project.getIssueNumber());
             if(issuesRequestBody.getDescription()!=null){
                 issues.setDescription(issuesRequestBody.getDescription());
@@ -98,24 +107,28 @@ public class IssuesServiceImplementation implements IssuesService {
         try {
             Issues issues = new Issues();
             issues.setTitle(issuesRequestBody.getTitle());
-            IssueTypes issueTypes = this.issueTypesRepository.findById(issuesRequestBody.getIssueTypeId()).orElseThrow(null);
+            Projects project = this.projectRepository.findById(issuesRequestBody.getProjectId()).orElseThrow(null);
+            issues.setProject(project);
+            IssueTypes issueTypes = this.issueTypesRepository.findAllByProjectAndLevelAndActive(project, 3, true).get(0);
             issues.setIssueType(issueTypes);
             Users createdBy = this.userRepository.findById(issuesRequestBody.getCreatedById()).orElseThrow(null);
             issues.setCreatedBy(createdBy);
-            Projects project = this.projectRepository.findById(issuesRequestBody.getProjectId()).orElseThrow(null);
-            issues.setProject(project);
             issues.setIssueName("I "+project.getIssueNumber());
             Issues parentIssue = this.issuesRepository.findById(issuesRequestBody.getParentIssueId()).orElseThrow(null);
+            if(parentIssue.getAssignedTo()!=null) {
+                issues.setAssignedTo(parentIssue.getAssignedTo());
+            }
             issues.setParentIssue(parentIssue);
             issues.setEstimatedTime(issuesRequestBody.getEstimatedTime());
             //Logic to add issue stage
             Pageable pageable = PageRequest.of(0,1);
             IssueStages issueStages = issueStagesRepository.findIssueStageWithLeastHierarchy(project, pageable).get(0);
             issues.setIssueStage(issueStages);
-
+            if(issuesRequestBody.getDescription()!=null){
+                issues.setDescription(issuesRequestBody.getDescription());
+            }
             if(parentIssue.getSprint()!=null) {
                 issues.setSprint(parentIssue.getSprint());
-                issues.setAssignedTo(parentIssue.getAssignedTo());
             }
             project.setIssueNumber(project.getIssueNumber()+1);
             this.projectRepository.save(project);
@@ -128,7 +141,8 @@ public class IssuesServiceImplementation implements IssuesService {
 
     @Override
     public ResponseEntity<Issues> updateIssue(IssuesRequestBody issuesRequestBody) {
-        try{
+        try
+        {
             Issues issues = this.issuesRepository.findById(issuesRequestBody.getId()).orElseThrow(null);
             if(issuesRequestBody.getTitle()!=null){
                 issues.setTitle(issuesRequestBody.getTitle());
@@ -164,23 +178,78 @@ public class IssuesServiceImplementation implements IssuesService {
             this.issuesRepository.save(issues);
             return new ResponseEntity<>(issues, HttpStatus.OK);
         }
-        catch (Exception e){
+        catch (Exception e)
+        {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
+
     @Override
-    public ResponseEntity<Issues> deleteIssue(Long id) {
-        try {
+    public ResponseEntity<Issues> deleteIssue(Long id)
+    {
+        try
+        {
             Issues issues = this.issuesRepository.findById(id).orElseThrow(null);
+            IssueTypes issueTypes=issues.getIssueType();
+            Integer level=issueTypes.getLevel();
+            List<Issues> childIssues=this.issuesRepository.findByParentIssue(issues);
+            List<LinkedIssue> causeIssues=this.linkedIssueRepository.findAllByCauseIssue(issues);
+            List<LinkedIssue> needIssues=this.linkedIssueRepository.findAllByNeedIssue(issues);
+            for(int i=0; i<causeIssues.size(); i++){
+                causeIssues.get(i).setActive(false);
+                this.linkedIssueRepository.save(causeIssues.get(i));
+            }
+            for(int i=0; i<needIssues.size(); i++){
+                needIssues.get(i).setActive(false);
+                this.linkedIssueRepository.save(needIssues.get(i));
+            }
+            if(level==1)
+            {
+                for (int i=0;i<childIssues.size();i++)
+                {
+                    childIssues.get(i).setParentIssue(null);
+                    this.issuesRepository.save(childIssues.get(i));
+                    causeIssues=this.linkedIssueRepository.findAllByCauseIssue(childIssues.get(i));
+                    needIssues=this.linkedIssueRepository.findAllByNeedIssue(childIssues.get(i));
+                    for(int j=0; j<causeIssues.size(); j++){
+                        causeIssues.get(j).setActive(false);
+                        this.linkedIssueRepository.save(causeIssues.get(j));
+                    }
+                    for(int j=0; j<needIssues.size(); j++){
+                        needIssues.get(j).setActive(false);
+                        this.linkedIssueRepository.save(needIssues.get(j));
+                    }
+                }
+            }
+            if(level==2)
+            {
+                for (int i=0;i<childIssues.size();i++)
+                {
+                    childIssues.get(i).setActive(false);
+                    this.issuesRepository.save(childIssues.get(i));
+                    causeIssues=this.linkedIssueRepository.findAllByCauseIssue(childIssues.get(i));
+                    needIssues=this.linkedIssueRepository.findAllByNeedIssue(childIssues.get(i));
+                    for(int j=0; j<causeIssues.size(); j++){
+                        causeIssues.get(j).setActive(false);
+                        this.linkedIssueRepository.save(causeIssues.get(j));
+                    }
+                    for(int j=0; j<needIssues.size(); j++){
+                        needIssues.get(j).setActive(false);
+                        this.linkedIssueRepository.save(needIssues.get(j));
+                    }
+                }
+            }
             issues.setActive(false);
             this.issuesRepository.save(issues);
             return new ResponseEntity<>(issues, HttpStatus.OK);
         }
-        catch (Exception e){
+        catch (Exception e)
+        {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
 
     @Override
     public ResponseEntity<List<Issues>> getAllIssues() {
@@ -193,6 +262,7 @@ public class IssuesServiceImplementation implements IssuesService {
         }
     }
 
+
     @Override
     public ResponseEntity<Issues> getIssueById(Long id) {
         try {
@@ -203,4 +273,30 @@ public class IssuesServiceImplementation implements IssuesService {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Override
+    public ResponseEntity<Integer> noOfIssuesBySprint(Long id) {
+        try{
+            Sprints sprints = this.sprintRepository.findById(id).orElseThrow(null);
+            Integer noOfIssues = this.issuesRepository.noOfIssuesBySprint(sprints);
+            return new ResponseEntity<>(noOfIssues, HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Override
+    public ResponseEntity<Issues> pushIssueToBacklog(Long id) {
+        try {
+            Issues issues = this.issuesRepository.findById(id).orElseThrow(null);
+            issues.setSprint(null);
+            this.issuesRepository.save(issues);
+            return new ResponseEntity<>(issues, HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 }
+
