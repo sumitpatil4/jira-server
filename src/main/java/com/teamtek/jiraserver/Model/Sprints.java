@@ -12,6 +12,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -34,6 +35,9 @@ public class Sprints {
     @JoinColumn(name= "project_id", referencedColumnName="id")
     @JsonIgnore
     private Projects project;
+
+    @OneToMany(mappedBy = "sprint",fetch = FetchType.EAGER)
+    List<Issues> issuesList;
 
     private boolean completed;
 
