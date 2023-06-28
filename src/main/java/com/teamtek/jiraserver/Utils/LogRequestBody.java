@@ -21,7 +21,7 @@ public class LogRequestBody {
     private String action;
     private String oldValue;
     private String newValue;
-    private Users user;
-    private Issues issue;
-    private Sprints sprint;
+    private String user;
+    private Long issue;
+    private Long sprint;
 }

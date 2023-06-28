@@ -1,9 +1,9 @@
 package com.teamtek.jiraserver.ServicesImplementation;
 
-import com.teamtek.jiraserver.Model.Logs;
-import com.teamtek.jiraserver.Model.Projects;
-import com.teamtek.jiraserver.Model.Users;
+import com.teamtek.jiraserver.Model.*;
+import com.teamtek.jiraserver.Repository.IssuesRepository;
 import com.teamtek.jiraserver.Repository.LogsRepository;
+import com.teamtek.jiraserver.Repository.SprintRepository;
 import com.teamtek.jiraserver.Repository.UserRepository;
 import com.teamtek.jiraserver.Services.LogsService;
 import com.teamtek.jiraserver.Utils.LogRequestBody;
@@ -19,6 +19,15 @@ public class LogsServiceImplementation implements LogsService {
     @Autowired
     private LogsRepository repository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private SprintRepository sprintRepository;
+
+    @Autowired
+    private IssuesRepository issuesRepository;
+
     @Override
     public ResponseEntity<Logs> addLog(LogRequestBody body) {
         try {
@@ -27,9 +36,14 @@ public class LogsServiceImplementation implements LogsService {
             log.setOldValue(body.getOldValue());
             log.setNewValue(body.getNewValue());
             log.setAction(body.getAction());
-            log.setUser(body.getUser());
-            log.setSprint(body.getSprint());
-            log.setIssue(body.getIssue());
+
+            Users user  = userRepository.findById(body.getUser()).orElseThrow(null);
+            Sprints sprint = sprintRepository.findById(body.getSprint()).orElseThrow(null);
+            Issues issue = issuesRepository.findById(body.getIssue()).orElseThrow(null);
+
+            log.setUser(user);
+            log.setSprint(sprint);
+            log.setIssue(issue);
 
             Logs create = repository.save(log);
 
