@@ -166,7 +166,6 @@ public class UserServiceImple implements UserService {
         }
 
         Users newuser = new Users();
-        System.out.println("hoi");
         newuser.setId(UUID.randomUUID().toString());
         newuser.setEmail(map.get("email"));
         newuser.setFName(map.get("given_name"));

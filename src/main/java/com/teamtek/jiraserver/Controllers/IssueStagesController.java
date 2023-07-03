@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/issue-stages")
+@CrossOrigin(origins= "*", allowedHeaders = "*")
 public class IssueStagesController {
     @Autowired
     private IssueStagesService issueStagesService;
@@ -29,6 +30,11 @@ public class IssueStagesController {
     @GetMapping("/project/least/{id}")
     public ResponseEntity<IssueStages> findByProjectWithLeastHierarchy(@PathVariable("id") Long id){
         return this.issueStagesService.findLeastHierarchyStageOfProject(id);
+    }
+
+    @GetMapping("/project/highest/{id}")
+    public ResponseEntity<IssueStages> findByProjectWithHighestHierarchy(@PathVariable("id") Long id){
+        return this.issueStagesService.findHighestHierarchyStageOfProject(id);
     }
 
     @DeleteMapping("/{id}")
