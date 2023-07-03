@@ -39,9 +39,6 @@ public class Projects {
     @JoinColumn(name = "active_sprint")
     private Sprints activeSprint;
 
-    @OneToMany(mappedBy = "project")
-    List<Sprints> sprintsList;
-
     private String description;
 
     private LocalDate startDate;
