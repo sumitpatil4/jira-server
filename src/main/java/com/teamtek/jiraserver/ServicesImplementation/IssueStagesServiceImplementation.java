@@ -116,6 +116,18 @@ public class IssueStagesServiceImplementation implements IssueStagesService {
             }
             return new ResponseEntity<>("Hierarchy Updated Successfully", HttpStatus.OK);
         }
+        catch(Exception e){
+          return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+  
+    public ResponseEntity<IssueStages> findHighestHierarchyStageOfProject(Long id) {
+        try{
+            Projects projects = this.projectRepository.findById(id).orElseThrow(null);
+            Pageable pageable = PageRequest.of(0,1);
+            List<IssueStages> issueStages = issueStagesRepository.findIssueStageWithHighestHierarchy(projects, pageable);
+            return new ResponseEntity<>(issueStages.get(0), HttpStatus.OK);
+        }
         catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

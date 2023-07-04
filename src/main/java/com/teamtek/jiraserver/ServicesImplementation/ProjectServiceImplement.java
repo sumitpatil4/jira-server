@@ -37,7 +37,6 @@ public class ProjectServiceImplement implements ProjectService {
             Projects project = new Projects();
             project.setTitle(body.getTitle());
             project.setOwner(owner);
-            System.out.println(owner.getFName());
             project.setDescription(body.getDescription());
             project.setStartDate(body.getStartDate());
             project.setEndDate(body.getEndDate());
@@ -85,7 +84,7 @@ public class ProjectServiceImplement implements ProjectService {
             IssueStages issueStages = new IssueStages();
             issueStages.setProject(project);
             issueStages.setTitle(stages[i]);
-            issueStages.setHierarchy(i);
+            issueStages.setHierarchy(stages.length-i);
             issueStagesRepository.save(issueStages);
         }
     }

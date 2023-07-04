@@ -17,4 +17,7 @@ public interface IssueStagesRepository extends JpaRepository<IssueStages,Long> {
     List<IssueStages> findIssueStageWithLeastHierarchy(@Param("project") Projects project, Pageable pageable);
 
     IssueStages findByProjectAndActiveAndHierarchy(Projects projects, boolean active, Integer hierarchy);
+  
+    @Query("SELECT s FROM IssueStages s WHERE s.active = true AND s.project = :project ORDER BY s.hierarchy ASC")
+    List<IssueStages> findIssueStageWithHighestHierarchy(@Param("project") Projects project, Pageable pageable);
 }

@@ -2,6 +2,8 @@ package com.teamtek.jiraserver.Model;
 
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -58,14 +61,20 @@ public class Issues {
 
     @ManyToOne
     @JoinColumn(name= "project_id", referencedColumnName="id")
+    @JsonIgnore
     private Projects project;
+
+    @OneToMany(mappedBy = "parentIssue")
+    List<Issues> issuesList;
 
     @ManyToOne
     @JoinColumn(name= "parent_issue_id", referencedColumnName="id")
+    @JsonIgnore
     private Issues parentIssue;
 
     @ManyToOne
     @JoinColumn(name= "sprint_id", referencedColumnName="id")
+    @JsonIgnore
     private Sprints sprint;
 
 }

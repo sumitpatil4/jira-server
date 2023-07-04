@@ -2,6 +2,8 @@ package com.teamtek.jiraserver.Model;
 
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +30,7 @@ public class IssueStages {
 
     @ManyToOne
     @JoinColumn(name= "project_id", referencedColumnName="id")
+    @JsonIgnore
     private Projects project;
 
     private LocalDateTime timeStamp = LocalDateTime.now();
