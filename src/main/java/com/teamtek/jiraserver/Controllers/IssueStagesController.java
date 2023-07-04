@@ -41,4 +41,9 @@ public class IssueStagesController {
     public ResponseEntity<IssueStages> deleteIssueStages(@PathVariable("id") Long id){
         return this.issueStagesService.deleteIssueStage(id);
     }
+
+    @PutMapping("/project/{project}/start/{start}/end/{end}")
+    public ResponseEntity<String> updateHierarchy(@PathVariable("project") Long project, @PathVariable("start") Integer start, @PathVariable("end") Integer end){
+        return this.issueStagesService.updateHierarchy(project, start, end);
+    }
 }

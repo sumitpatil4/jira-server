@@ -26,7 +26,7 @@ public class IssueStages {
 
     private String title;
 
-    private int hierarchy;
+    private Integer hierarchy;
 
     @ManyToOne
     @JoinColumn(name= "project_id", referencedColumnName="id")

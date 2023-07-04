@@ -15,6 +15,6 @@ public interface IssueStagesService {
 //    ResponseEntity<IssueStages> updateIssueStage(IssueStages issueStages);
     ResponseEntity<IssueStages> deleteIssueStage(Long id);
     ResponseEntity<IssueStages> findLeastHierarchyStageOfProject(Long id);
-
+    ResponseEntity<String> updateHierarchy(Long projectId, Integer start, Integer end);
     ResponseEntity<IssueStages> findHighestHierarchyStageOfProject(Long id);
 }
