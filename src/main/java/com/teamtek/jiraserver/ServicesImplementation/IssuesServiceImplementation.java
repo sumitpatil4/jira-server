@@ -2,6 +2,7 @@ package com.teamtek.jiraserver.ServicesImplementation;
 
 import com.teamtek.jiraserver.Model.*;
 import com.teamtek.jiraserver.Repository.*;
+import com.teamtek.jiraserver.Services.BoardSequenceService;
 import com.teamtek.jiraserver.Services.IssuesService;
 import com.teamtek.jiraserver.Utils.IssuesRequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class IssuesServiceImplementation implements IssuesService {
 
     @Autowired
     private LinkedIssueRepository linkedIssueRepository;
+
+    @Autowired
+    private BoardSequenceService boardSequenceService;
 
     @Override
     public ResponseEntity<Issues> createNewTask(IssuesRequestBody issuesRequestBody) {
@@ -69,6 +73,8 @@ public class IssuesServiceImplementation implements IssuesService {
             project.setIssueNumber(project.getIssueNumber()+1);
             this.projectRepository.save(project);
             this.issuesRepository.save(issues);
+            if(issuesRequestBody.getSprintId()!=null)
+                this.boardSequenceService.assignBoardSequenceNumber(issues);
             return new ResponseEntity<>(issues, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -176,6 +182,7 @@ public class IssuesServiceImplementation implements IssuesService {
                 issues.setSprint(sprints);
             }
             this.issuesRepository.save(issues);
+            this.boardSequenceService.assignBoardSequenceNumber(issues);
             return new ResponseEntity<>(issues, HttpStatus.OK);
         }
         catch (Exception e)
